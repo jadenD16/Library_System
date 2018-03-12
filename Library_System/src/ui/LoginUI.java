@@ -69,13 +69,9 @@ public class LoginUI extends JDialog
 		passIcon = new JLabel(new ImageIcon(LoginUI.class.getResource("/pictures/passI.png")));
 		passIcon.setBounds(62, 111, 25, 26);
 		add(passIcon);
-		
 	}
 	
-	public void Login()
-	{
-		
-	}
+	
 	
 	
 }

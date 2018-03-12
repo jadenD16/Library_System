@@ -77,10 +77,13 @@ public class LibrarySystemMain extends JFrame implements ActionListener{
 	private User user;
 	private JLabel lblname;
 	
-	public LibrarySystemMain() 
+	public LibrarySystemMain(Connection connection2) 
 	{
-		userinformationUI = new UserInformationUI(getConnection());
-		booksDA = new BooksDA(getConnection());
+		
+		this.connection = connection;
+		
+		userinformationUI = new UserInformationUI(connection);
+		booksDA = new BooksDA(connection);
 		user = new User();
 		
 		setResizable(false);
@@ -163,6 +166,7 @@ public class LibrarySystemMain extends JFrame implements ActionListener{
 		scrollPane.setBounds(422, 237, 904, 375);
 		getContentPane().add(scrollPane);
 		
+		
 		btnUpdate = new JButton("UPDATE");
 		btnUpdate.setFont(new Font("Segoe UI", Font.BOLD, 20));
 		btnUpdate.setBounds(875, 615, 111, 35);
@@ -239,14 +243,14 @@ public class LibrarySystemMain extends JFrame implements ActionListener{
 			fillBookTable();
 		}
 		else if(action.equalsIgnoreCase("Add"))
-			 addUI = new AddUI(getConnection());
+			 addUI = new AddUI(connection);
 		
 		else if(action.equalsIgnoreCase("Manage Users")) 
 			manageUser();
 		
 		else if(action.equalsIgnoreCase("login"))
 		{
-			loginUI = new LoginUI(getConnection());
+			loginUI = new LoginUI(connection);
 						
 		}
 	}
@@ -292,27 +296,6 @@ public class LibrarySystemMain extends JFrame implements ActionListener{
 
 	}
 
-	
-	
-	public Connection getConnection()
-	{
-				
-			try
-			{
-				Class.forName("com.ibm.db2.jcc.DB2Driver");
-				connection = DriverManager.getConnection
-						("jdbc:db2://localhost:50000/library","sweetie", "medeys");
-			}
-			catch(ClassNotFoundException e1)
-			{
-				e1.printStackTrace();
-			}
-			catch(SQLException e2)
-			{
-				e2.printStackTrace();
-			}
-		return connection;
-	}
 
 	public void fillBookTable()
 	{
@@ -367,13 +350,5 @@ public class LibrarySystemMain extends JFrame implements ActionListener{
 	        table.getTableHeader().getColumnModel().getColumn(column).setResizable(false);
 	    }	
 	}
-	
-	
-	
- 	public static void main(String[]args)
-	{
-		new LibrarySystemMain();		
-	}
-
-	
+		
 }
