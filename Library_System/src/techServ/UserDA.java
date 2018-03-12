@@ -25,7 +25,6 @@ public class UserDA
 	{
 		this.connection = connection;
 		this.user = user;
-		ui = new LibrarySystemMain();
 		
 		try 
 		{

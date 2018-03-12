@@ -77,13 +77,10 @@ public class LibrarySystemMain extends JFrame implements ActionListener{
 	private User user;
 	private JLabel lblname;
 	
-	public LibrarySystemMain(Connection connection2) 
+	public LibrarySystemMain() 
 	{
-		
-		this.connection = connection;
-		
-		userinformationUI = new UserInformationUI(connection);
-		booksDA = new BooksDA(connection);
+		userinformationUI = new UserInformationUI(getConnection());
+		booksDA = new BooksDA(getConnection());
 		user = new User();
 		
 		setResizable(false);
@@ -243,14 +240,14 @@ public class LibrarySystemMain extends JFrame implements ActionListener{
 			fillBookTable();
 		}
 		else if(action.equalsIgnoreCase("Add"))
-			 addUI = new AddUI(connection);
+			 addUI = new AddUI(getConnection());
 		
 		else if(action.equalsIgnoreCase("Manage Users")) 
 			manageUser();
 		
 		else if(action.equalsIgnoreCase("login"))
 		{
-			loginUI = new LoginUI(connection);
+			loginUI = new LoginUI(getConnection());
 						
 		}
 	}
@@ -296,6 +293,27 @@ public class LibrarySystemMain extends JFrame implements ActionListener{
 
 	}
 
+	
+	
+	public Connection getConnection()
+	{
+				
+			try
+			{
+				Class.forName("com.ibm.db2.jcc.DB2Driver");
+				connection = DriverManager.getConnection
+						("jdbc:db2://localhost:50000/library","sweetie", "medeys");
+			}
+			catch(ClassNotFoundException e1)
+			{
+				e1.printStackTrace();
+			}
+			catch(SQLException e2)
+			{
+				e2.printStackTrace();
+			}
+		return connection;
+	}
 
 	public void fillBookTable()
 	{
@@ -343,12 +361,18 @@ public class LibrarySystemMain extends JFrame implements ActionListener{
 	            Component comp = table.prepareRenderer(renderer, row, column);
 	            width = Math.max(comp.getPreferredSize().width+10 , width);
 	        }
-	        
-	        
-	        	        
+	        	        	        
 	        columnModel.getColumn(column).setPreferredWidth(width);
 	        table.getTableHeader().getColumnModel().getColumn(column).setResizable(false);
 	    }	
 	}
-		
+	
+	
+	
+ 	public static void main(String[]args)
+	{
+		new LibrarySystemMain();		
+	}
+
+	
 }
