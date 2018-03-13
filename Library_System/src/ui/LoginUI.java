@@ -3,11 +3,19 @@ package ui;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
 import java.awt.Font;
 import javax.swing.JTextField;
+
+import domain.User;
+import techServ.UserDA;
+
 import java.awt.event.ActionListener;
 import java.sql.Connection;
+import java.util.List;
 import java.awt.event.ActionEvent;
 import javax.swing.JPasswordField;
 import javax.swing.ImageIcon;
@@ -15,14 +23,17 @@ import java.awt.Window.Type;
 import java.awt.Dimension;
 import java.awt.Dialog.ModalityType;
 
-public class LoginUI extends JDialog  
+public class LoginUI extends JDialog implements ActionListener
 {
 	private JTextField userNameTF;
-	private JPasswordField passwordField;
+	private JPasswordField password;
 	
 	private JLabel lblUserName,userIcon,lblPassword,passIcon;
 	private JButton btnLogin,btnCancel;
 	private Connection connection;
+	private User user;
+	private UserDA userDA;
+	private List<User> accList;
 	
 	public LoginUI(Connection connection)
 	{
@@ -66,19 +77,62 @@ public class LoginUI extends JDialog
 		btnLogin.setFont(new Font("Segoe UI", Font.BOLD, 14));
 		btnLogin.setBounds(97, 185, 89, 23);
 		getContentPane().add(btnLogin);
+		btnLogin.addActionListener(this);
 		
 		btnCancel = new JButton("Cancel");
 		btnCancel.setFont(new Font("Segoe UI", Font.BOLD, 14));
 		btnCancel.setBounds(242, 185, 89, 23);
+		btnCancel.addActionListener(this);
 		getContentPane().add(btnCancel);
 		
-		passwordField = new JPasswordField();
-		passwordField.setBounds(200, 119, 156, 22);
-		getContentPane().add(passwordField);
+		password = new JPasswordField();
+		password.setBounds(200, 119, 156, 22);
+		getContentPane().add(password);
 		
 		passIcon = new JLabel(new ImageIcon(LoginUI.class.getResource("/pictures/passI.png")));
 		passIcon.setBounds(62, 111, 25, 26);
 		getContentPane().add(passIcon);
+	}
+
+	
+	public void actionPerformed(ActionEvent e) 
+	{
+		
+		String action=e.getActionCommand();
+				
+		if(action.equalsIgnoreCase("Cancel"))
+			this.dispose();
+		
+		else if(action.equalsIgnoreCase("Login"))
+		{	
+			int iterator = 0;		
+
+			userDA = new UserDA(connection);
+			
+			accList=userDA.getAccList();
+		
+			for(User user : accList)
+			{
+				
+				if(user.getUserName().equals(userNameTF.getText()) && user.getPassWord().equals(String.valueOf(password.getPassword())))
+				{
+					break;
+				}
+				
+				else if(!(user.getUserName().equals(userNameTF.getText())) && !(user.getPassWord().equals(String.valueOf(password.getPassword())))
+						 && accList.size()-1==iterator)
+				{
+
+					 String message = "Invalid username or password";
+						    JOptionPane.showMessageDialog(new JFrame(), message, "Dialog",
+						        JOptionPane.ERROR_MESSAGE);
+				}
+				
+				iterator++;
+			}
+			
+		}
+	
 	}
 			
 	

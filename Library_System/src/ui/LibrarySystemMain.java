@@ -293,8 +293,6 @@ public class LibrarySystemMain extends JFrame implements ActionListener{
 
 	}
 
-	
-	
 	public Connection getConnection()
 	{
 				

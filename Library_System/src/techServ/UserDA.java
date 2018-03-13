@@ -4,6 +4,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -19,42 +21,35 @@ public class UserDA
 	private Connection connection;
 	private ResultSet rs;
 	private User user;
-	private LibrarySystemMain ui;
+	private List<User> accList = new ArrayList<User>();
 	
-	public UserDA(Connection connection,User user)
+	public UserDA(Connection connection)
 	{
 		this.connection = connection;
-		this.user = user;
 		
 		try 
 		{
 		
+
 			PreparedStatement ps;
 			//prepared chuhcu s will contain the sql statement / query
 			String query;
-			query = "Select * from Users where username = ? and password = ? ";
+			query = "Select * from Users";
 			ps= connection.prepareStatement(query);
 						
-			ps.setString(1,user.getUserName());
-			ps.setString(2, user.getPassWord());
 			rs = ps.executeQuery();
 			
-			if(!rs.next())
+			while(rs.next())
 			{
+
+			user = new User();
+			user.setUserId(rs.getString(1));
+			user.setUserName(rs.getString(2));
+			user.setPassWord(rs.getString(3));
+			user.setUserType(rs.getString(4));
 			
-			 String message = "Invalid username or password";
-				    JOptionPane.showMessageDialog(new JFrame(), message, "Dialog",
-				        JOptionPane.ERROR_MESSAGE);
+			accList.add(user);
 			}
-			
-			else
-			{
-				user.setUserId(rs.getString(1));
-				user.setUserName(rs.getString(2));
-				user.setUserType(rs.getString(4));
-//				ui.loggedIn(user);
-			}
-			
 		}
 		
 				
@@ -64,6 +59,8 @@ public class UserDA
 		}		
 	}
 	
-				
+	public List<User> getAccList(){
+		return accList;
+	}
 	
 }
