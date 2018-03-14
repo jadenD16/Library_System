@@ -206,7 +206,6 @@ public class LibrarySystemMain extends JFrame implements ActionListener{
 		
 		btnBorrow = new JButton("Borrow");
 		btnBorrow.setBounds(1237, 209, 89, 23);
-		getContentPane().add(btnBorrow);
 		
 		lblBackground = new JLabel("");
 		lblBackground.setIcon(new ImageIcon(LibrarySystemMain.class.getResource("/pictures/background.jpg")));
@@ -243,8 +242,11 @@ public class LibrarySystemMain extends JFrame implements ActionListener{
 			 addUI = new AddUI(getConnection());
 		
 		else if(action.equalsIgnoreCase("Manage Users")) 
+		{
 			manageUser();
-		
+			repaint();
+			revalidate();
+		}	
 		else if(action.equalsIgnoreCase("login"))
 		{
 			loginUI = new LoginUI(getConnection());
@@ -252,29 +254,32 @@ public class LibrarySystemMain extends JFrame implements ActionListener{
 		}
 	}
 	
-	public void loggedIn()
+	public void loggedIn(String userType)
 	{
 		
-		this.user=user;
+		if(userType.equalsIgnoreCase("admin"))
+		{
+			btnManageUsers.setText("Manage Users");
+			panel.add(btnManageUsers);
+			panel.add(btnManageBooks);
+			panel.add(btnViewHistory);
+		}
 		
-		panel.add(lblprofile);
-		lblname.setText("Welcome admin");
+		else
+		{
+			btnManageUsers.setText("View Profile");
+			panel.add(btnManageUsers);
+			panel.add(btnBorrowedBooks);
+			panel.add(btnViewHistory);
+			panel.add(btnManageBooks);
+			
+			
+		}
 		
-		getContentPane().add(btnBorrow);
-		//btnManageUsers.setText("View Profile");
-		panel.add(btnManageUsers);
-		panel.add(lblname);
-		panel.add(btnBorrowedBooks);
-		panel.add(btnManageBooks);
-//		panel.add(btnViewHistory);
-//		if(user.getUserType().equalsIgnoreCase("admin"))
-//		{
-//			panel.add(btnManageUsers);
-//			panel.add(btnManageBooks);
-//			
-//		}
-		panel.repaint();		
-	}
+		
+		panel.repaint();	
+		}	
+	
 	
 	public void manageUser() {
 		remove(lblSearch);

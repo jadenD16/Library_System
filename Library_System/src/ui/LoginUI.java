@@ -34,7 +34,8 @@ public class LoginUI extends JDialog implements ActionListener
 	private User user;
 	private UserDA userDA;
 	private List<User> accList;
-	
+	private LibrarySystemMain ui;
+
 	public LoginUI(Connection connection)
 	{
 		setModalityType(ModalityType.APPLICATION_MODAL);
@@ -116,6 +117,10 @@ public class LoginUI extends JDialog implements ActionListener
 				
 				if(user.getUserName().equals(userNameTF.getText()) && user.getPassWord().equals(String.valueOf(password.getPassword())))
 				{
+					
+					dispose();
+					ui = new LibrarySystemMain();
+					ui.loggedIn(user.getUserType());
 					break;
 				}
 				
