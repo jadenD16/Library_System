@@ -30,8 +30,6 @@ public class Books
 		this.shelfNumber = string;
 	}
 
-	
-		
 	public String getYearPub() {
 		return yearPub;
 	}

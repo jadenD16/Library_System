@@ -3,33 +3,30 @@ package techServ;
 import java.util.ArrayList;
 import java.util.List;
 
-import domain.Books;
+import domain.SelectedBook;
 
 public class BookBorrowedDA 
 {
 
-	List<Books> bookBorrowedList;
+	private SelectedBook selectedB;
+	private List<SelectedBook> selectedBList = new ArrayList<SelectedBook>();
 	
-	public BookBorrowedDA(Books book)
+	public BookBorrowedDA()
 	{
-		 book = new Books();
-		
-		bookBorrowedList = new ArrayList<Books>();
-		
-		bookBorrowedList.add(book);
-		
+		selectedB = new SelectedBook();
 	}
 	
 	
-	public void addBook()
+	
+	public void setSelectedBook(SelectedBook selected)
 	{
-		
+		System.out.println(selected.getBookAuthor());
+		selectedBList.add(selected);
 	}
 	
-	public void removedBook()
+	public List<SelectedBook> getSelectedBList()
 	{
-	
+		return selectedBList;
 	}
-	
 	
 }

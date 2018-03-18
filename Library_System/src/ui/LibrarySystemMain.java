@@ -25,7 +25,9 @@ import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumnModel;
 
 import domain.Books;
+import domain.SelectedBook;
 import domain.User;
+import techServ.BookBorrowedDA;
 import techServ.BooksDA;
 
 import javax.swing.JButton;
@@ -35,6 +37,8 @@ import java.awt.Frame;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.ListSelectionModel;
+
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -54,7 +58,7 @@ public class LibrarySystemMain extends JFrame implements ActionListener{
 	private JPanel contentPane,panel;
 	private JTable table;
 	private JTextField textField;
-	
+	private SelectedBook selectB;
 	private JScrollPane scrollPane;	
 	private JComboBox comboBox;
 	
@@ -76,12 +80,16 @@ public class LibrarySystemMain extends JFrame implements ActionListener{
 	private LoginUI loginUI;
 	private User user;
 	private JLabel lblname;
+	private SelectedBook selected;
+	private BookBorrowedUI bookBorrowedUI;
+	private BookBorrowedDA bookBDA;
 	
 	public LibrarySystemMain() 
 	{
 		userinformationUI = new UserInformationUI(getConnection());
 		booksDA = new BooksDA(getConnection());
 		user = new User();
+		bookBDA = new BookBorrowedDA();
 		
 		setResizable(false);
 		setSize(1370, 718);		
@@ -128,7 +136,7 @@ public class LibrarySystemMain extends JFrame implements ActionListener{
 		btnLogin.addActionListener(this);
 		btnLogin.setFont(new Font("Tahoma", Font.BOLD, 12));
 		btnLogin.setBounds(1204, 134, 89, 23);
-		add(btnLogin);
+		getContentPane().add(btnLogin);
 		
 				
 		table = new JTable()
@@ -140,27 +148,13 @@ public class LibrarySystemMain extends JFrame implements ActionListener{
         };
         
 		table.setOpaque(false);
+		table.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
 		table.getTableHeader().setReorderingAllowed(false);
-		table.addMouseListener(new MouseAdapter()
-		{
-			
-			 public void mouseClicked(MouseEvent e) 
-			 {
-			
-				
-				 int row =  table.getSelectedRow();
-				 int column = table.getSelectedColumn();
-				 
-				 System.out.println(row+" "+column);
-			
-			 }	 
-				 
-		});
 		
 		scrollPane = new JScrollPane(table,JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		scrollPane.setEnabled(false);
 		scrollPane.setOpaque(false);
-		scrollPane.setBounds(422, 237, 904, 375);
+		scrollPane.setBounds(341, 237, 985, 402);
 		getContentPane().add(scrollPane);
 		
 		
@@ -176,24 +170,24 @@ public class LibrarySystemMain extends JFrame implements ActionListener{
 		
 		textField = new JTextField();
 		textField.setFont(new Font("Segoe UI", Font.PLAIN, 15));
-		textField.setBounds(505, 178, 290, 27);
+		textField.setBounds(425, 185, 290, 27);
 		textField.setColumns(10);
 		getContentPane().add(textField);
 		
 		lblSearch = new JLabel("Search");
 		lblSearch.setFont(new Font("Segoe UI", Font.BOLD, 16));
-		lblSearch.setBounds(422, 178, 80, 26);
+		lblSearch.setBounds(342, 185, 80, 26);
 		getContentPane().add(lblSearch);
 		
 		comboBox = new JComboBox();
 		comboBox.setFont(new Font("Arial",Font.PLAIN,14));
 		comboBox.setModel(new DefaultComboBoxModel(new String[]{"----","A-C","D-F","G-I","J-L","M-P","Q-S","T-V","W-Z"}));
-		comboBox.setBounds(515, 219, 89, 20);
+		comboBox.setBounds(425, 217, 89, 20);
 		getContentPane().add(comboBox);
 		
 		lblFilterby = new JLabel("Sort By:");
 		lblFilterby.setFont(new Font("Arial", Font.BOLD, 16));
-		lblFilterby.setBounds(422, 210, 80, 16);
+		lblFilterby.setBounds(341, 218, 80, 16);
 		getContentPane().add(lblFilterby);
 		
 		JLabel lblLibraryManagementSystem = new JLabel("LIBRARY MANAGEMENT SYSTEM");
@@ -206,6 +200,8 @@ public class LibrarySystemMain extends JFrame implements ActionListener{
 		
 		btnBorrow = new JButton("Borrow");
 		btnBorrow.setBounds(1237, 209, 89, 23);
+		btnBorrow.addActionListener(this);
+		add(btnBorrow);
 		
 		lblBackground = new JLabel("");
 		lblBackground.setIcon(new ImageIcon(LibrarySystemMain.class.getResource("/pictures/background.jpg")));
@@ -248,11 +244,42 @@ public class LibrarySystemMain extends JFrame implements ActionListener{
 			revalidate();
 		}	
 		else if(action.equalsIgnoreCase("login"))
-		{
 			loginUI = new LoginUI(getConnection());
 						
+		else if(action.equals("Borrow"))
+		{
+			int row=table.getSelectedRow(),
+				column=0;
+				selected = new SelectedBook();
+				
+				while(column<7)
+				{
+					if(column==0)
+						selected.setBookCode(String.valueOf(table.getValueAt(row, column)));
+					
+					else if(column==1)
+						selected.setBookName(String.valueOf(table.getValueAt(row, column)));
+					
+					else if(column==2)
+						selected.setBookAuthor(String.valueOf(table.getValueAt(row, column)));
+										
+					else if(column==5)
+						selected.setCategory(String.valueOf(table.getValueAt(row, column)));
+					
+					else if(column==6)
+						selected.setPublishYear(String.valueOf(table.getValueAt(row, column)));	
+					
+					column++;					
+				}
+
+				bookBDA.setSelectedBook(selected);
+			 }
+		
+		else if(action.equalsIgnoreCase("Borrowing List"))
+				bookBorrowedUI = new BookBorrowedUI(bookBDA);
 		}
-	}
+		
+	
 	
 	public void loggedIn(String userType)
 	{
@@ -277,7 +304,7 @@ public class LibrarySystemMain extends JFrame implements ActionListener{
 		}
 		
 		
-		panel.repaint();	
+			panel.repaint();	
 		}	
 	
 	
@@ -318,11 +345,13 @@ public class LibrarySystemMain extends JFrame implements ActionListener{
 		return connection;
 	}
 
+	
+
 	public void fillBookTable()
 	{
 		
-		tableHeader = new String[]{"Title","Author","Section",
-					"Shelf","Category","P.Y","-"};
+		tableHeader = new String[]{"Book No.","Title","Author","Section",
+					"Shelf","Category","P.Y"};
 	
 		tableModel = new DefaultTableModel(tableHeader,0)
 		{
@@ -341,12 +370,13 @@ public class LibrarySystemMain extends JFrame implements ActionListener{
 		for(Books book : booksDA.getBookList())
 		{
 												
-				tableModel.addRow(new Object[]{book.getBookName(),book.getBookAuthor(),book.getSection(),book.getShelfNumber(),
-							  book.getCategory(),book.getYearPub(),"Borrow"});
+				tableModel.addRow(new Object[]{book.getBookCode(),book.getBookName(),book.getBookAuthor(),book.getSection(),book.getShelfNumber(),
+							  book.getCategory(),book.getYearPub()});
 		}
 				
 			renderTable();
 	}
+	
 
 	public void renderTable()
 	{

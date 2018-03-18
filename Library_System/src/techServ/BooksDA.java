@@ -77,6 +77,11 @@ public class BooksDA
 	}
 	
 	
+	public BooksDA() {
+		// TODO Auto-generated constructor stub
+	}
+
+
 	public void AddBook(Connection connection, Books books) {
 		
 	}
