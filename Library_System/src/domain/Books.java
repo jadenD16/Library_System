@@ -30,6 +30,7 @@ public class Books
 		this.shelfNumber = string;
 	}
 
+		
 	public String getYearPub() {
 		return yearPub;
 	}
@@ -87,7 +88,7 @@ public class Books
 	public void setBookCode(String bookCode) {
 		this.bookCode = bookCode;
 	}
-
+	
 	
 	
 	

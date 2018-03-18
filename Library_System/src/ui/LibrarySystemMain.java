@@ -332,7 +332,7 @@ public class LibrarySystemMain extends JFrame implements ActionListener{
 			{
 				Class.forName("com.ibm.db2.jcc.DB2Driver");
 				connection = DriverManager.getConnection
-						("jdbc:db2://localhost:50000/library","sweetie", "medeys");
+						("jdbc:db2://localhost:50000/library","Edwin Javinar", "secret");
 			}
 			catch(ClassNotFoundException e1)
 			{
