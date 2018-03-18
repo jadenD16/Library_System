@@ -154,7 +154,7 @@ public class LibrarySystemMain extends JFrame implements ActionListener{
 		scrollPane = new JScrollPane(table,JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		scrollPane.setEnabled(false);
 		scrollPane.setOpaque(false);
-		scrollPane.setBounds(341, 237, 985, 402);
+		scrollPane.setBounds(341, 237, 985, 352);
 		getContentPane().add(scrollPane);
 		
 		
@@ -201,7 +201,7 @@ public class LibrarySystemMain extends JFrame implements ActionListener{
 		btnBorrow = new JButton("Borrow");
 		btnBorrow.setBounds(1237, 209, 89, 23);
 		btnBorrow.addActionListener(this);
-		add(btnBorrow);
+		getContentPane().add(btnBorrow);
 		
 		lblBackground = new JLabel("");
 		lblBackground.setIcon(new ImageIcon(LibrarySystemMain.class.getResource("/pictures/background.jpg")));
