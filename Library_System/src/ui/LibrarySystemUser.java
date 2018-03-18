@@ -81,10 +81,20 @@ public class LibrarySystemUser extends JFrame{
 		
 		
 		JLabel lblNewLabel = new JLabel("");
-		lblNewLabel.setIcon(new ImageIcon(LibrarySystemMain.class.getResource("/pictures/background.jpg")));
+//		lblNewLabel.setIcon(new ImageIcon(LibrarySystemMain.class.getResource("/pictures/background.jpg")));
 		lblNewLabel.setBounds(0, 0, 1364, 674);
-		getContentPane().add(lblNewLabel);		
+		getContentPane().add(lblNewLabel);
+		
+		
+		
+		
+		
+		
 		setVisible(true);
 	}
-	
+	public static void main(String[]args)
+	{
+		new LibrarySystemUser();
+		
+	}
 }
