@@ -515,52 +515,7 @@ public class UserInformationUI extends JPanel implements ActionListener{
 			AddDisables(true);
 			AddEnables(false);
 		}
-		/*
-		else if(action.equalsIgnoreCase("Search")) {
-			tableHeader = new String[]{"Title","Author","Section",
-					"Shelf","Category","P.Y"};
-			
-			tableModel = new DefaultTableModel(tableHeader,0);
-			table.setModel(tableModel);
-			bookList= booksDA.getBookList();
-			
-			if(txtSearch.getText().length() != 0 )
-			{
-				
-				if(isValidWord(txtSearch.getText())) 
-				{
-					bookSearchList = new ArrayList<Books>();
-					bookSearchList.clear();
-					 
-					bookList= (ArrayList<Books>)booksDA.getBookList();
-					
-					for(Books book : booksDA.getBookList())
-					{
-						if(book.getBookName().toLowerCase().contains(txtSearch.getText())) 
-						{
-															
-							String[] row = {book.getBookName(),book.getBookAuthor(),book.getSection(),book.getShelfNumber(),
-										  book.getCategory(),book.getYearPub()};
-							bookSearchList.add(book);
-							tableModel.addRow(row);
-						}
-						
-						
-					}	
-				}
-				else 
-				{
-					JOptionPane.showMessageDialog(null, "Incorrect Input");
-					librarySystemMain.fillBookTable();
-				}
-			}
-			else 
-			{
-				librarySystemMain.fillBookTable();
-			}
-			librarySystemMain.renderTable();
-		}
-	*/
+		
 	}
 	
 	public void EnableAddEditDelete(boolean input) {
