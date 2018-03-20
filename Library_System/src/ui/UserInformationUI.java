@@ -272,7 +272,7 @@ public class UserInformationUI extends JPanel implements ActionListener{
 		
 		yearLevelBox = new JComboBox();
 		yearLevelBox.setBounds(777,160,274,26);
-		yearLevelBox.setModel(new DefaultComboBoxModel(new String[]{"1st","2nd","3rd","4th","5th"}));
+		yearLevelBox.setModel(new DefaultComboBoxModel(new String[]{"1st","2nd","3rd","4th","5th","N/A"}));
 		add(yearLevelBox);
 		
 		userTypeBox = new JComboBox();
@@ -538,7 +538,6 @@ public class UserInformationUI extends JPanel implements ActionListener{
 								else
 									userinfo.setGender("F");
 								
-								//TODO eto ung sa users
 								
 								users.setUserId(userIdTF.getText());
 								users.setUserName(userNameTF.getText());

@@ -113,7 +113,6 @@ public class UserDA
 			ps.setString(1, user.getUserName().trim());
 			ps.setString(2, user.getPassWord().trim());
 			ps.setString(3, user.getUserId().trim());
-			System.out.println(user.getUserId()+"HELLO"+user.getPassWord());
 			
 			ps.executeUpdate();
 			
