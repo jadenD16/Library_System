@@ -67,7 +67,7 @@ public class LibrarySystemMain extends JFrame implements ActionListener{
 	private SelectedBook selectB;
 	private JScrollPane scrollPane;	
 	
-	private JLabel lblNewLabel_1,lblprofile  ;
+	private JLabel lblNewLabel_1,lblprofile,lblNewLabel  ;
 	
 	private JButton btnUpdate, btnAdd, btnLogin,btnBorrowedBooks,btnSearch,btnManageBooks,btnViewHistory,btnManageUsers,btnBorrow ;
 	
@@ -119,6 +119,11 @@ public class LibrarySystemMain extends JFrame implements ActionListener{
 		
 		getContentPane().add(panel);
 		panel.setLayout(null);
+		
+//		
+//		lblNewLabel = new JLabel("New label");
+//		lblNewLabel.setBounds(100, 75, 170, 142);
+//		panel.add(lblNewLabel);
 		
 		lblprofile = new JLabel("");
 		lblprofile.setBorder(new LineBorder(new Color(0, 0, 0), 3, true));
@@ -288,10 +293,12 @@ public class LibrarySystemMain extends JFrame implements ActionListener{
 			author = booksDA.GetLastAuthorInfo();
 				
 		}
-		else if(action.equalsIgnoreCase("Update")) {
-		selectB = new SelectedBook();
-		updateUI = new UpdateUI(connection,selectB);
-		}
+		
+		else if(action.equalsIgnoreCase("Update")) 
+			getTableValue("Update");			
+		
+		
+		
 		else if(action.equalsIgnoreCase("Manage Users")) 
 		{
 			manageUser();
@@ -303,19 +310,23 @@ public class LibrarySystemMain extends JFrame implements ActionListener{
 			loginUI = new LoginUI(getConnection(),home);
 
 		}
-		else if(action.equalsIgnoreCase("Log out")) {
+		else if(action.equalsIgnoreCase("Logout")) {
 			btnLogin.setText("Login");
 			System.out.println("napipindot");
 			panel.removeAll();
 			fillBookTable();
 			remove(btnAdd);
 			remove(btnUpdate);
+			remove(btnBorrow);
 			add(btnSearch);
 			add(textField);
 			getContentPane().remove(userinformationUI);
 			getContentPane().add(scrollPane);
 			panel.repaint();
 			repaint();
+		}
+		else if(action.equalsIgnoreCase("View Books")) {
+			fillBookTable();
 		}
 			
 		else if(action == "Manage Books")
@@ -325,37 +336,12 @@ public class LibrarySystemMain extends JFrame implements ActionListener{
 			manageUser();
 		
 		else if(action.equalsIgnoreCase("View History"))
-			fillHistoryTable();
-		
-		
-		else if(action.equals("Borrow"))
 		{
-			int row=table.getSelectedRow(),
-				column=0;
-				selected = new SelectedBook();
-				
-				while(column<7)
-				{
-					if(column==0)
-						selected.setBookCode(String.valueOf(table.getValueAt(row, column)));
-					
-					else if(column==1)
-						selected.setBookName(String.valueOf(table.getValueAt(row, column)));
-					
-					else if(column==2)
-						selected.setBookAuthor(String.valueOf(table.getValueAt(row, column)));
-										
-					else if(column==5)
-						selected.setCategory(String.valueOf(table.getValueAt(row, column)));
-					
-					else if(column==6)
-						selected.setPublishYear(String.valueOf(table.getValueAt(row, column)));	
-					
-					column++;					
-				}
-
-				bookBDA.setSelectedBook(selected);
-			 }
+			fillHistoryTable();
+		}
+		else if(action.equals("Borrow"))
+			getTableValue("Borrow");
+			
 		
 		else if(action.equalsIgnoreCase("Borrowing List"))
 			
@@ -370,23 +356,25 @@ public class LibrarySystemMain extends JFrame implements ActionListener{
 		
 		if(userType.equalsIgnoreCase("admin"))
 		{
-			btnLogin.setText("Log out");
+			btnLogin.setText("Logout");
 			btnManageUsers.setText("Manage Users");
 			panel.add(btnManageUsers);
 			panel.add(btnManageBooks);
 			panel.add(btnViewHistory);
+			
 		}
 		
 		else
 		{
 			btnLogin.setText("Logout");
 			btnManageUsers.setText("View Profile");
+			btnManageBooks.setText("View Books");
+			btnViewHistory.setText("Borrowing List");
 			panel.add(btnManageUsers);
-			panel.add(btnBorrowedBooks);
+//			panel.add(btnBorrowedBooks);
 			panel.add(btnViewHistory);
 			panel.add(btnManageBooks);
 			getContentPane().add(btnBorrow);
-
 		}
 		
 		
@@ -401,10 +389,8 @@ public class LibrarySystemMain extends JFrame implements ActionListener{
 		remove(scrollPane);
 		remove(btnAdd);
 		remove(btnUpdate);
-<<<<<<< HEAD
-=======
 
->>>>>>> 05b5b5d96e5acbd6b1c2ef0ba263004957e68089
+		
 		getContentPane().add(userinformationUI);
 		repaint();
 		
@@ -423,7 +409,7 @@ public class LibrarySystemMain extends JFrame implements ActionListener{
 			{
 				Class.forName("com.ibm.db2.jcc.DB2Driver");
 				connection = DriverManager.getConnection
-						("jdbc:db2://localhost:50000/library","sweetie", "medeys");
+						("jdbc:db2://localhost:50000/library","Edwin Javinar", "secret");
 			}
 			catch(ClassNotFoundException e1)
 			{
@@ -435,35 +421,6 @@ public class LibrarySystemMain extends JFrame implements ActionListener{
 			}
 		return connection;
 	}
-	
-	public void getTableInformation() {
-				
-		int row=table.getSelectedRow(),
-		column=0;
-		selected = new SelectedBook();
-				
-		while(column<7)
-		{
-			if(column==0)
-				selected.setBookCode(String.valueOf(table.getValueAt(row, column)));
-			else if(column==1)
-				selected.setBookName(String.valueOf(table.getValueAt(row, column)));
-					
-			else if(column==2)
-				selected.setBookAuthor(String.valueOf(table.getValueAt(row, column)));
-										
-			else if(column==5)
-				selected.setCategory(String.valueOf(table.getValueAt(row, column)));
-					
-			else if(column==6)
-				selected.setPublishYear(String.valueOf(table.getValueAt(row, column)));	
-					
-					column++;					
-		}
-
-				bookBDA.setSelectedBook(selected);
-	
-		}
 
 	public void fillBookTable()
 	{
@@ -545,4 +502,59 @@ public class LibrarySystemMain extends JFrame implements ActionListener{
 		renderTable();
 
 	}
+
+	public void getTableValue(String button)
+	{
+
+		int row=table.getSelectedRow(),
+			column=0;
+			selected = new SelectedBook();
+			book = new Books();
+			while(column<7)
+			{
+				if(column==0)
+				{
+					selected.setBookCode(String.valueOf(table.getValueAt(row, column)));
+					book.setBookCode(String.valueOf(table.getValueAt(row, column)));
+				}
+				else if(column==1)
+				{
+					selected.setBookName(String.valueOf(table.getValueAt(row, column)));
+					book.setBookName(String.valueOf(table.getValueAt(row, column)));
+				}
+				else if(column==2)
+				{	
+					selected.setBookAuthor(String.valueOf(table.getValueAt(row, column)));
+					book.setBookAuthor(String.valueOf(table.getValueAt(row, column)));
+				}					
+				
+				else if(column==3)
+					book.setShelfNumber(String.valueOf(table.getValueAt(row, column)));
+					
+				else if(column==4)
+					book.setSection(String.valueOf(table.getValueAt(row, column)));
+				
+				else if(column==5)
+				{
+					selected.setCategory(String.valueOf(table.getValueAt(row, column)));
+					book.setCategory(String.valueOf(table.getValueAt(row, column)));
+				}
+				else if(column==6)
+				{
+					selected.setPublishYear(String.valueOf(table.getValueAt(row, column)));
+					book.setYearPub(String.valueOf(table.getValueAt(row, column)));
+				}
+				column++;					
+			}
+			
+			if(button.equalsIgnoreCase("Update"))
+				updateUI = new UpdateUI(connection,book);
+			
+			else
+				bookBDA.setSelectedBook(selected);
+	}
+
+
+
+
 }

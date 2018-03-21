@@ -495,7 +495,7 @@ public class UserInformationUI extends JPanel implements ActionListener{
 			{
 				if(isFilled() && ((radioButtonMale.isSelected() == true)||(radioButtonFemale.isSelected() == true))) 	
 				{
-					if((fnameTF.getText().matches("^[a-zA-Z]*$")) && (middleTF.getText().matches("^[a-zA-Z]*$")) && (lnameTF.getText().matches("^[a-zA-Z]*$"))){
+					if((fnameTF.getText().matches("^[a-zA-Z]*$")) && (middleTF.getText().matches("^[a-zA-Z.]*$")) && (lnameTF.getText().matches("^[a-zA-Z]*$"))){
 							if((contactTF.getText().matches("^[0-9]*$")) && contactTF.getText().length() == 11) 
 							{
 									userinfo = new UserInfo();
@@ -571,7 +571,7 @@ public class UserInformationUI extends JPanel implements ActionListener{
 			{
 				if(isFilled() && ((radioButtonMale.isSelected() == true)||(radioButtonFemale.isSelected() == true))) 
 				{
-						if((fnameTF.getText().matches("^[a-zA-Z]*$")) && (middleTF.getText().matches("^[a-zA-Z]*$")) && (lnameTF.getText().matches("^[a-zA-Z]*$"))) 
+						if((fnameTF.getText().matches("^[a-zA-Z]*$")) && (middleTF.getText().matches("^[a-zA-Z.]*$")) && (lnameTF.getText().matches("^[a-zA-Z]*$"))) 
 						{
 							if( (contactTF.getText().matches("^[0-9]*$")) && contactTF.getText().length() == 11) { 
 								userinfo = new UserInfo();
@@ -621,7 +621,7 @@ public class UserInformationUI extends JPanel implements ActionListener{
 								remove(userNameTF);
 								remove(lblPassword);
 								remove(passwordTF);
-
+								remove(btnUpload);
 								getDisplayUser();
 								repaint();
 								revalidate();

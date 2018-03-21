@@ -52,7 +52,6 @@ public class UpdateUI extends JDialog implements ActionListener {
 	private SectionDA sectionDA;
 	private Category category;
 	private CategoryDA categoryDA;
-	private Books book;
 	private BooksDA bookDA;
 	private Author author;
 	private BookAuthor bookAuthor;
@@ -61,10 +60,9 @@ public class UpdateUI extends JDialog implements ActionListener {
 	private Connection connection;
 	private UserInformationUI userinformationUI;
 	private LibrarySystemMain lbmain;
-	public UpdateUI(Connection connection, SelectedBook selectB) {
+	public UpdateUI(Connection connection, Books book) {
 		this.connection = connection;
 		contentPanel = new JPanel();
-				
 		setSize(667, 472);
 		setLayout(new BorderLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -75,7 +73,6 @@ public class UpdateUI extends JDialog implements ActionListener {
 		sectionDA = new SectionDA(connection);
 		categoryDA=new CategoryDA(connection);
 		bookDA= new BooksDA(connection);
-		book = new Books();
 		
 		firstName = new JLabel("Title");
 		firstName.setFont(new Font("Tahoma", Font.BOLD, 13));
@@ -86,6 +83,8 @@ public class UpdateUI extends JDialog implements ActionListener {
 		titleTF.setBounds(267, 42, 153, 20);
 		contentPanel.add(titleTF);
 		titleTF.setColumns(10);
+		titleTF.setText(book.getBookName());
+		System.out.println(book.getBookName());
 		
 		picturelbl = new JLabel("New label");
 		picturelbl.setBorder(new LineBorder(new Color(0, 0, 0)));
@@ -107,6 +106,7 @@ public class UpdateUI extends JDialog implements ActionListener {
 		bookCodeTF.setColumns(10);
 		bookCodeTF.setBounds(267, 11,114, 20);
 		bookCodeTF.setEditable(false);
+		bookCodeTF.setText(book.getBookCode());
 //		book=bookDA.GetLastBookInfo();
 //		Integer Book = Integer.valueOf(book.getBookCode())+1;
 //		bookCodeTF.setText(String.format("%05d", Book ));
@@ -126,15 +126,13 @@ public class UpdateUI extends JDialog implements ActionListener {
 		authorCode.setColumns(10);
 		authorCode.setBounds(482, 11, 114, 20);
 		authorCode.setEditable(false);
-//		author=bookDA.GetLastAuthorInfo();
-//		Integer Author = Integer.valueOf(author.getAuthorID())+1;
-//		authorCode.setText(String.format("%05d", Author));
 		contentPanel.add(authorCode);
 		
 		fnameTF = new JTextField();
 		fnameTF.setBounds(267, 73, 64, 20);
 		contentPanel.add(fnameTF);
 		fnameTF.setColumns(10);
+//		System.out.println(author[0].trim());
 		
 		middleTF = new JTextField();
 		middleTF.setBounds(332, 73, 29, 20);
@@ -145,6 +143,23 @@ public class UpdateUI extends JDialog implements ActionListener {
 		lnameTF.setBounds(362, 73, 60, 20);
 		contentPanel.add(lnameTF);
 		lnameTF.setColumns(10);
+//		lnameTF.setText(author[2].trim());
+		
+		String[] author = book.getBookAuthor().split(" ");
+		System.out.println(author.length+" First:"+author[0]+" last:"+author[3]);
+		if(author.length == 4) {
+			
+			fnameTF.setText(author[0]);
+			lnameTF.setText(author[3]);
+			middleTF.setText(" ");
+		}
+		else {
+			fnameTF.setText(author[0]);
+			middleTF.setText(author[1]);
+			lnameTF.setText(author[2]);
+			
+		}
+		
 		
 		lblDescription = new JLabel("Description:");
 		lblDescription.setFont(new Font("Tahoma", Font.BOLD, 13));
@@ -164,6 +179,7 @@ public class UpdateUI extends JDialog implements ActionListener {
 		yearChooser = new JYearChooser();
 		yearChooser.setBounds(322, 105, 101, 20);
 		contentPanel.add(yearChooser);
+		yearChooser.setYear(Integer.parseInt(book.getYearPub()));
 		
 		lblCategory = new JLabel("Section");
 		lblCategory.setFont(new Font("Tahoma", Font.BOLD, 13));
@@ -177,6 +193,7 @@ public class UpdateUI extends JDialog implements ActionListener {
 			sectionCB.addItem(section.getSectionCode());
 		}
 		contentPanel.add(sectionCB);
+		sectionCB.setSelectedItem(book.getSection());
 		
 		lblLocation = new JLabel("Location:");
 		lblLocation.setFont(new Font("Tahoma", Font.BOLD, 13));
@@ -195,6 +212,8 @@ public class UpdateUI extends JDialog implements ActionListener {
 			categoryCB.addItem(category.getCategoryCode());
 		}
 		contentPanel.add(categoryCB);
+		categoryCB.setSelectedItem(book.getCategory());
+		
 		
 		lblNumber = new JLabel("Shelf No.");
 		lblNumber.setFont(new Font("Tahoma", Font.BOLD, 13));
@@ -204,6 +223,8 @@ public class UpdateUI extends JDialog implements ActionListener {
 		shelfNoCB = new JComboBox();
 		shelfNoCB.setBounds(537, 167, 88, 20);
 		shelfNoCB.setModel(new DefaultComboBoxModel(new String[]{"1","2","3","4","5","6","7","8","9","10"}));
+		shelfNoCB.setSelectedItem(book.getShelfNumber());
+		
 		contentPanel.add(shelfNoCB);
 		{
 			JPanel buttonPane = new JPanel();
@@ -225,11 +246,7 @@ public class UpdateUI extends JDialog implements ActionListener {
 		setVisible(true);
 		setLocationRelativeTo(null);		
 	}
-	public void setTextField() {
-		bookCodeTF.setText(selected.getBookCode());
-		titleTF.setText(selected.getBookName());
-//		yearChooser.setYear(YEAR(selected.getPublishYear()));
-	}
+	
 	public boolean isFilled() {
 		
 		if(!fnameTF.getText().trim().equals("") && !middleTF.getText().trim().equals("") && !lnameTF.getText().trim().equals("") && !titleTF.getText().trim().equals("")) {

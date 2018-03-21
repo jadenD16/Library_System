@@ -67,22 +67,16 @@ public class AddUI extends JDialog implements ActionListener {
 		contentPanel = new JPanel();
 				
 		dispose();
-		setSize(667, 472);
-		getContentPane().setLayout(new BorderLayout());
+		setSize(599, 266);
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
-		getContentPane().add(contentPanel, BorderLayout.CENTER);
-<<<<<<< HEAD
-//		contentPanel.setBackground(new Color(51, 153, 153));
-		
-		contentPanel.setLayout(null);
-=======
->>>>>>> 05b5b5d96e5acbd6b1c2ef0ba263004957e68089
+		getContentPane().add(contentPanel);
 		
 		bookAuthorDA = new BookAuthorDA(connection);
 		sectionDA = new SectionDA(connection);
 		categoryDA=new CategoryDA(connection);
 		bookDA= new BooksDA(connection);
 		book = new Books();
+		contentPanel.setLayout(null);
 		contentPanel.setLayout(null);
 		
 		firstName = new JLabel("Title");
@@ -116,7 +110,7 @@ public class AddUI extends JDialog implements ActionListener {
 		contentPanel.add(lblAuthor);
 		
 		JLabel lblAuthorCode = new JLabel("Author Code");
-		lblAuthorCode.setBounds(322, 12, 88, 16);
+		lblAuthorCode.setBounds(279, 12, 88, 16);
 		lblAuthorCode.setFont(new Font("Tahoma", Font.BOLD, 13));
 		contentPanel.add(lblAuthorCode);
 		
@@ -147,21 +141,18 @@ public class AddUI extends JDialog implements ActionListener {
 		lnameTF.setColumns(10);
 		
 		lblYearPublished = new JLabel("Year Published");
-		lblYearPublished.setBounds(10, 109, 109, 16);
+		lblYearPublished.setBounds(279, 43, 109, 16);
 		lblYearPublished.setFont(new Font("Tahoma", Font.BOLD, 13));
 		contentPanel.add(lblYearPublished);
 	
-		yearChooser = new JYearChooser();
-		yearChooser.setBounds(129, 105, 101, 20);
-		contentPanel.add(yearChooser);
 		
 		lblCategory = new JLabel("Section");
-		lblCategory.setBounds(162, 168, 73, 16);
+		lblCategory.setBounds(10, 129, 73, 16);
 		lblCategory.setFont(new Font("Tahoma", Font.BOLD, 13));
 		contentPanel.add(lblCategory);
 		
 		sectionCB = new JComboBox();
-		sectionCB.setBounds(212, 167, 88, 20);
+		sectionCB.setBounds(79, 128, 88, 20);
 		for(Section section: sectionDA.getSectionList()) 
 		{
 			sectionCB.addItem(section.getSectionCode());
@@ -169,17 +160,17 @@ public class AddUI extends JDialog implements ActionListener {
 		contentPanel.add(sectionCB);
 		
 		lblLocation = new JLabel("Location:");
-		lblLocation.setBounds(163, 141, 73, 16);
+		lblLocation.setBounds(10, 101, 73, 16);
 		lblLocation.setFont(new Font("Tahoma", Font.BOLD, 13));
 		contentPanel.add(lblLocation);
 		
 		lblLocation_1 = new JLabel("Category");
-		lblLocation_1.setBounds(310, 168, 73, 16);
+		lblLocation_1.setBounds(196, 129, 73, 16);
 		lblLocation_1.setFont(new Font("Tahoma", Font.BOLD, 13));
 		contentPanel.add(lblLocation_1);
 		
 		categoryCB = new JComboBox();
-		categoryCB.setBounds(377, 167, 88, 20);
+		categoryCB.setBounds(279, 128, 88, 20);
 		for(Category category: categoryDA.getCategoryList())
 		{
 			categoryCB.addItem(category.getCategoryCode());
@@ -187,14 +178,20 @@ public class AddUI extends JDialog implements ActionListener {
 		contentPanel.add(categoryCB);
 		
 		lblNumber = new JLabel("Shelf No.");
-		lblNumber.setBounds(475, 170, 73, 16);
+		lblNumber.setBounds(377, 129, 73, 16);
 		lblNumber.setFont(new Font("Tahoma", Font.BOLD, 13));
 		contentPanel.add(lblNumber);
 		
 		shelfNoCB = new JComboBox();
-		shelfNoCB.setBounds(537, 167, 88, 20);
+		shelfNoCB.setBounds(460, 128, 88, 20);
 		shelfNoCB.setModel(new DefaultComboBoxModel(new String[]{"1","2","3","4","5","6","7","8","9","10"}));
 		contentPanel.add(shelfNoCB);
+		
+
+		
+		 yearChooser = new JYearChooser();
+		yearChooser.setBounds(475, 43, 98, 20);
+		contentPanel.add(yearChooser);
 		{
 			JPanel buttonPane = new JPanel();
 			buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
@@ -271,3 +268,4 @@ public class AddUI extends JDialog implements ActionListener {
 		}
 	}
 }
+
