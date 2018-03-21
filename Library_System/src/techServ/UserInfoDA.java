@@ -78,7 +78,7 @@ public class UserInfoDA
 			PreparedStatement ps = null;
 			String query;
 			
-			query="Insert into  userinfo(userid,firstName,middleInitial,LastName,ContactNumber,Gender,ProgCode,DeptCode,YearLevel,Birthday) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+			query="Insert into  userinfo(userid,firstName,middleInitial,LastName,ContactNumber,Gender,ProgCode,DeptCode,YearLevel,Birthday,userpic) VALUES(?, ?, ?, ?, ?, ?, ?, ?,?, ?, ?)";
 
 			ps = connection.prepareStatement(query);
 			
@@ -94,7 +94,7 @@ public class UserInfoDA
 			
 			ps.setString(9, userinfo.getYearLevel());
 			ps.setString(10, userinfo.getBirthday());
-			
+			ps.setString(11, userinfo.getUserpic());
 			ps.executeUpdate();
 			userInfoList.add(userinfo);
 			RefreshList(connection);

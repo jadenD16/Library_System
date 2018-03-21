@@ -54,7 +54,9 @@ import java.awt.event.ActionEvent;
 import javax.swing.JComboBox;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingConstants;
+import javax.swing.UIManager;
 import javax.swing.border.MatteBorder;
+import javax.swing.border.SoftBevelBorder;
 
 public class LibrarySystemMain extends JFrame implements ActionListener{
 
@@ -106,12 +108,13 @@ public class LibrarySystemMain extends JFrame implements ActionListener{
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setTitle("Library System");
 		setLocationRelativeTo(null);
+		getContentPane().setBackground(UIManager.getColor("Button.shadow"));
 		getContentPane().setLayout(null);
-		
 		panel = new JPanel();
-		panel.setBackground(new Color(32, 178, 170));
-		panel.setBorder(new LineBorder(new Color(0, 0, 0), 7, true));
+		panel.setBackground(new Color(51, 153, 153));
+		panel.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
 		panel.setBounds(10, 134, 263, 529);
+		
 		getContentPane().add(panel);
 		panel.setLayout(null);
 		
@@ -162,7 +165,7 @@ public class LibrarySystemMain extends JFrame implements ActionListener{
 		table.getTableHeader().setReorderingAllowed(false);
 		
 		scrollPane = new JScrollPane(table,JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-		scrollPane.setBorder(new MatteBorder(3, 3, 3, 3, (Color) new Color(0, 0, 0)));
+		scrollPane.setBorder(new BevelBorder(BevelBorder.RAISED, new Color(153, 153, 153), new Color(153, 153, 153), new Color(153, 153, 153), new Color(153, 153, 153)));
 		scrollPane.setEnabled(false);
 		scrollPane.setOpaque(false);
 		scrollPane.setBounds(341, 237, 985, 352);
@@ -193,10 +196,12 @@ public class LibrarySystemMain extends JFrame implements ActionListener{
 	
 		
 		JLabel lblLibraryManagementSystem = new JLabel("LIBRARY MANAGEMENT SYSTEM");
-		lblLibraryManagementSystem.setBorder(new MatteBorder(0, 0, 4, 0, (Color) new Color(0, 0, 0)));
+		lblLibraryManagementSystem.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
 		lblLibraryManagementSystem.setHorizontalAlignment(SwingConstants.CENTER);
-		lblLibraryManagementSystem.setFont(new Font("Segoe UI", Font.BOLD, 52));
-		lblLibraryManagementSystem.setBackground(new Color(30, 144, 255));
+		lblLibraryManagementSystem.setFont(new Font("Segoe UI Light", Font.BOLD | Font.ITALIC, 60));
+		lblLibraryManagementSystem.setForeground(new Color(255,255,255));
+		
+		lblLibraryManagementSystem.setBackground(new Color(51, 153, 153));
 		lblLibraryManagementSystem.setOpaque(true);
 		lblLibraryManagementSystem.setBounds(0, 0, 1380, 123);
 		getContentPane().add(lblLibraryManagementSystem);
@@ -223,11 +228,6 @@ public class LibrarySystemMain extends JFrame implements ActionListener{
 			getContentPane().add(scrollPane);
 			getContentPane().add(btnAdd);
 			getContentPane().add(btnUpdate);
-<<<<<<< HEAD
-			
-=======
-					
->>>>>>> 36c8ab7d85d39d5b884eacb79b05118e2bf81d51
 			remove(userinformationUI);
 			repaint();
 			
@@ -287,7 +287,7 @@ public class LibrarySystemMain extends JFrame implements ActionListener{
 		}
 		else if(action.equalsIgnoreCase("Update")) {
 		selectB = new SelectedBook();
-			updateUI = new UpdateUI(connection,selectB);
+		updateUI = new UpdateUI(connection,selectB);
 		}
 		else if(action.equalsIgnoreCase("Manage Users")) 
 		{
@@ -299,7 +299,21 @@ public class LibrarySystemMain extends JFrame implements ActionListener{
 		{
 			loginUI = new LoginUI(getConnection(),home);
 
-		}	
+		}
+		else if(action.equalsIgnoreCase("Log out")) {
+			btnLogin.setText("Login");
+			System.out.println("napipindot");
+			panel.removeAll();
+			fillBookTable();
+			remove(btnAdd);
+			remove(btnUpdate);
+			add(btnSearch);
+			add(textField);
+			getContentPane().remove(userinformationUI);
+			getContentPane().add(scrollPane);
+			panel.repaint();
+			repaint();
+		}
 			
 		else if(action == "Manage Books")
 			fillBookTable();
@@ -349,7 +363,7 @@ public class LibrarySystemMain extends JFrame implements ActionListener{
 		
 		if(userType.equalsIgnoreCase("admin"))
 		{
-			
+			btnLogin.setText("Log out");
 			btnManageUsers.setText("Manage Users");
 			panel.add(btnManageUsers);
 			panel.add(btnManageBooks);
@@ -358,6 +372,7 @@ public class LibrarySystemMain extends JFrame implements ActionListener{
 		
 		else
 		{
+			btnLogin.setText("Logout");
 			btnManageUsers.setText("View Profile");
 			panel.add(btnManageUsers);
 			panel.add(btnBorrowedBooks);
@@ -379,11 +394,6 @@ public class LibrarySystemMain extends JFrame implements ActionListener{
 		remove(scrollPane);
 		remove(btnAdd);
 		remove(btnUpdate);
-<<<<<<< HEAD
-=======
-
-		
->>>>>>> 36c8ab7d85d39d5b884eacb79b05118e2bf81d51
 		getContentPane().add(userinformationUI);
 		repaint();
 		
@@ -414,6 +424,35 @@ public class LibrarySystemMain extends JFrame implements ActionListener{
 			}
 		return connection;
 	}
+	
+	public void getTableInformation() {
+				
+		int row=table.getSelectedRow(),
+		column=0;
+		selected = new SelectedBook();
+				
+		while(column<7)
+		{
+			if(column==0)
+				selected.setBookCode(String.valueOf(table.getValueAt(row, column)));
+			else if(column==1)
+				selected.setBookName(String.valueOf(table.getValueAt(row, column)));
+					
+			else if(column==2)
+				selected.setBookAuthor(String.valueOf(table.getValueAt(row, column)));
+										
+			else if(column==5)
+				selected.setCategory(String.valueOf(table.getValueAt(row, column)));
+					
+			else if(column==6)
+				selected.setPublishYear(String.valueOf(table.getValueAt(row, column)));	
+					
+					column++;					
+		}
+
+				bookBDA.setSelectedBook(selected);
+	
+		}
 
 	
 
@@ -446,7 +485,6 @@ public class LibrarySystemMain extends JFrame implements ActionListener{
 				
 			renderTable();
 	}
-
 	public void renderTable()
 	{
 		columnModel = table.getColumnModel();

@@ -7,7 +7,6 @@
 	<classpathentry kind="lib" path="Library_System/JCalendar Lib/jgoodies-looks-2.4.1.jar"/>
 	<classpathentry kind="lib" path="Library_System/JCalendar Lib/junit-4.6.jar"/>
 	<classpathentry kind="lib" path="Library_System/miglayout15-swing.jar"/>
-	<classpathentry kind="lib" path="C:/Program Files/IBM/SQLLIB/java/Common.jar"/>
 	<classpathentry kind="lib" path="C:/Program Files/IBM/SQLLIB/java/db2dbgm.jar"/>
 	<classpathentry kind="lib" path="C:/Program Files/IBM/SQLLIB/java/db2ext.jar"/>
 	<classpathentry kind="lib" path="C:/Program Files/IBM/SQLLIB/java/db2java.zip"/>
@@ -17,7 +16,12 @@
 	<classpathentry kind="lib" path="C:/Program Files/IBM/SQLLIB/java/db2policy.jar"/>
 	<classpathentry kind="lib" path="C:/Program Files/IBM/SQLLIB/java/db2qgjava.jar"/>
 	<classpathentry kind="lib" path="C:/Program Files/IBM/SQLLIB/java/db2umplugin.jar"/>
-	<classpathentry kind="lib" path="C:/Program Files/IBM/SQLLIB/java/sqlj.zip"/>
-	<classpathentry kind="lib" path="C:/Program Files/IBM/SQLLIB/java/sqlj4.zip"/>
+	<classpathentry kind="lib" path="C:/Users/Edwin odewyn/CaseStudies/[CaseStudy]Human Comuter Interaction/Library_System/Library_System/JCalendar Lib/commons-logging-1.2.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Edwin odewyn/CaseStudies/[CaseStudy]Human Comuter Interaction/Library_System/Library_System/JCalendar Lib/commons-logging-1.2-javadoc.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Edwin odewyn/CaseStudies/[CaseStudy]Human Comuter Interaction/Library_System/Library_System/JCalendar Lib/commons-io-2.6.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Edwin odewyn/CaseStudies/[CaseStudy]Human Comuter Interaction/Library_System/Library_System/JCalendar Lib/commons-io-2.6-javadoc.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Edwin odewyn/CaseStudies/[CaseStudy]Human Comuter Interaction/Library_System/Library_System/JCalendar Lib/commons-io-2.6-sources.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Edwin odewyn/CaseStudies/[CaseStudy]Human Comuter Interaction/Library_System/Library_System/JCalendar Lib/commons-io-2.6-tests.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Edwin odewyn/CaseStudies/[CaseStudy]Human Comuter Interaction/Library_System/Library_System/JCalendar Lib/commons-io-2.6-test-sources.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

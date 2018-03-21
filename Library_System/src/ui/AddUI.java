@@ -9,6 +9,7 @@ import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JTextPane;
+import javax.swing.UIManager;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 
@@ -73,6 +74,8 @@ public class AddUI extends JDialog implements ActionListener {
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
+//		contentPanel.setBackground(new Color(51, 153, 153));
+		
 		contentPanel.setLayout(null);
 		
 		bookAuthorDA = new BookAuthorDA(connection);
