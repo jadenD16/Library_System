@@ -29,8 +29,10 @@ import javax.swing.JComboBox;
 import java.awt.event.ActionListener;
 import java.awt.print.Book;
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.time.Year;
 import java.awt.event.ActionEvent;
 
 public class UpdateUI extends JDialog implements ActionListener {
@@ -55,6 +57,7 @@ public class UpdateUI extends JDialog implements ActionListener {
 	private Author author;
 	private BookAuthor bookAuthor;
 	private BookAuthorDA bookAuthorDA;
+	private SelectedBook selected;
 	private Connection connection;
 	private UserInformationUI userinformationUI;
 	private LibrarySystemMain lbmain;
@@ -104,10 +107,9 @@ public class UpdateUI extends JDialog implements ActionListener {
 		bookCodeTF.setColumns(10);
 		bookCodeTF.setBounds(267, 11,114, 20);
 		bookCodeTF.setEditable(false);
-		
-		book=bookDA.GetLastBookInfo();
-		Integer Book = Integer.valueOf(book.getBookCode())+1;
-		bookCodeTF.setText(String.format("%05d", Book ));
+//		book=bookDA.GetLastBookInfo();
+//		Integer Book = Integer.valueOf(book.getBookCode())+1;
+//		bookCodeTF.setText(String.format("%05d", Book ));
 		contentPanel.add(bookCodeTF);
 		
 		lblAuthor = new JLabel("Author");
@@ -124,11 +126,9 @@ public class UpdateUI extends JDialog implements ActionListener {
 		authorCode.setColumns(10);
 		authorCode.setBounds(482, 11, 114, 20);
 		authorCode.setEditable(false);
-		
-		author=bookDA.GetLastAuthorInfo();
-		Integer Author = Integer.valueOf(author.getAuthorID())+1;
-		authorCode.setText(String.format("%05d", Author));
-		
+//		author=bookDA.GetLastAuthorInfo();
+//		Integer Author = Integer.valueOf(author.getAuthorID())+1;
+//		authorCode.setText(String.format("%05d", Author));
 		contentPanel.add(authorCode);
 		
 		fnameTF = new JTextField();
@@ -225,6 +225,11 @@ public class UpdateUI extends JDialog implements ActionListener {
 		setVisible(true);
 		setLocationRelativeTo(null);		
 	}
+	public void setTextField() {
+		bookCodeTF.setText(selected.getBookCode());
+		titleTF.setText(selected.getBookName());
+//		yearChooser.setYear(YEAR(selected.getPublishYear()));
+	}
 	public boolean isFilled() {
 		
 		if(!fnameTF.getText().trim().equals("") && !middleTF.getText().trim().equals("") && !lnameTF.getText().trim().equals("") && !titleTF.getText().trim().equals("")) {
@@ -241,45 +246,10 @@ public class UpdateUI extends JDialog implements ActionListener {
 		
 		if(action.equalsIgnoreCase("Cancel"))
 			dispose();
-		else if(action.equalsIgnoreCase("Save"))
-		{
+		else if(action.equalsIgnoreCase("Save")) {
 			
-			if(isFilled()) 
-			{
-				if((fnameTF.getText().matches("^[a-zA-Z]*$")) && (middleTF.getText().matches("^[a-zA-Z]*$")) && (lnameTF.getText().matches("^[a-zA-Z]*$")) && (titleTF.getText().matches("^[a-zA-Z0-9]*$"))) 
-				{
-					book = new Books();
-					author = new Author();
-					bookAuthor = new BookAuthor();
-					
-					book.setBookCode(bookCodeTF.getText());
-					book.setBookName(titleTF.getText());
-					book.setSection(sectionCB.getSelectedItem().toString());
-					book.setShelfNumber(shelfNoCB.getSelectedItem().toString());
-					book.setCategory(categoryCB.getSelectedItem().toString());
-					book.setDesc(descTF.getText());
-					
-					book.setYearPub(Integer.toString(yearChooser.getYear()));
-					author.setAuthorID(authorCode.getText());
-					author.setFname(fnameTF.getText());
-					author.setMiddleInitial(middleTF.getText());
-					author.setLname(lnameTF.getText());
-					
-					bookAuthor.setBookCode(bookCodeTF.getText());
-					bookAuthor.setAuthorId(authorCode.getText());
-					
-					bookDA.AddBooks(connection, book, author,bookAuthor);
-					repaint();
-					revalidate();
-					dispose();
-					}
-					else
-						JOptionPane.showMessageDialog(null, "Invalid Inputs");
-			}
-			else
-
-				JOptionPane.showMessageDialog(null, "Please Fill Up the Blanks");
 		}
 	}
+	}
+
 	
-}
