@@ -180,14 +180,11 @@ public class LibrarySystemMain extends JFrame implements ActionListener{
 		textField.setColumns(10);
 		getContentPane().add(textField);
 		
-<<<<<<< HEAD
 		lblSearch = new JLabel("Search");
 		lblSearch.setForeground(new Color(245, 255, 250));
 		lblSearch.setFont(new Font("Segoe UI", Font.BOLD, 16));
 		lblSearch.setBounds(342, 185, 80, 26);
 		getContentPane().add(lblSearch);
-=======
->>>>>>> 5f99ff5ac3dd78c920686b1ad0e9cbec75827c9f
 		
 		
 		btnSearch = new JButton("Search");	
@@ -227,12 +224,8 @@ public class LibrarySystemMain extends JFrame implements ActionListener{
 			getContentPane().add(scrollPane);
 			getContentPane().add(btnAdd);
 			getContentPane().add(btnUpdate);
-<<<<<<< HEAD
 			getContentPane().add(comboBox);
 			getContentPane().add(lblFilterby);
-=======
-			getContentPane().add(lblBackground); 
->>>>>>> 5f99ff5ac3dd78c920686b1ad0e9cbec75827c9f
 			
 			remove(userinformationUI);
 			repaint();
@@ -300,17 +293,14 @@ public class LibrarySystemMain extends JFrame implements ActionListener{
 		else if(action.equalsIgnoreCase("login"))
 		{
 			loginUI = new LoginUI(getConnection());
-<<<<<<< HEAD
+
 		}	
-						
-=======
-				
+			
 		else if(action == "Manage Books")
 			fillBookTable();
 		else if(action == "Manage Users") 
 			manageUser();
 	
->>>>>>> 5f99ff5ac3dd78c920686b1ad0e9cbec75827c9f
 		else if(action.equals("Borrow"))
 		{
 			int row=table.getSelectedRow(),
@@ -349,12 +339,8 @@ public class LibrarySystemMain extends JFrame implements ActionListener{
 	
 	public void loggedIn(String userType, User user)
 	{
-<<<<<<< HEAD
-		
 		this.user = user;
 		
-=======
->>>>>>> 5f99ff5ac3dd78c920686b1ad0e9cbec75827c9f
 		if(userType.equalsIgnoreCase("admin"))
 		{
 			
@@ -371,10 +357,8 @@ public class LibrarySystemMain extends JFrame implements ActionListener{
 			panel.add(btnBorrowedBooks);
 			panel.add(btnViewHistory);
 			panel.add(btnManageBooks);
-<<<<<<< HEAD
 			getContentPane().add(btnBorrow);
-=======
->>>>>>> 5f99ff5ac3dd78c920686b1ad0e9cbec75827c9f
+
 		}
 		
 		
@@ -389,12 +373,8 @@ public class LibrarySystemMain extends JFrame implements ActionListener{
 		remove(scrollPane);
 		remove(btnAdd);
 		remove(btnUpdate);
-<<<<<<< HEAD
 		remove(comboBox);
 		remove(lblFilterby);
-=======
-		remove(lblBackground);
->>>>>>> 5f99ff5ac3dd78c920686b1ad0e9cbec75827c9f
 		
 		getContentPane().add(userinformationUI);
 		repaint();
@@ -415,7 +395,7 @@ public class LibrarySystemMain extends JFrame implements ActionListener{
 			{
 				Class.forName("com.ibm.db2.jcc.DB2Driver");
 				connection = DriverManager.getConnection
-						("jdbc:db2://localhost:50000/library","Edwin Javinar", "secret");
+						("jdbc:db2://localhost:50000/library","sweetie", "medeys");
 			}
 			catch(ClassNotFoundException e1)
 			{
