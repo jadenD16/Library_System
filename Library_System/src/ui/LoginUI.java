@@ -36,8 +36,11 @@ public class LoginUI extends JDialog implements ActionListener
 	private List<User> accList;
 	private LibrarySystemMain ui;
 
-	public LoginUI(Connection connection)
+	public LoginUI(Connection connection, LibrarySystemMain home)
 	{
+		
+		ui=home;
+		
 		setModalityType(ModalityType.APPLICATION_MODAL);
 		setSize(new Dimension(442, 305));
 		setResizable(false);
@@ -119,7 +122,6 @@ public class LoginUI extends JDialog implements ActionListener
 				{
 					
 					dispose();
-					ui = new LibrarySystemMain();
 					ui.loggedIn(user.getUserType(),user);
 					
 					break;

@@ -99,6 +99,7 @@ public class AddUI extends JDialog implements ActionListener {
 		btnUpload = new JButton("Upload");
 		btnUpload.setFont(new Font("Tahoma", Font.BOLD, 12));
 		btnUpload.setBounds(10, 143, 125, 23);
+		btnUpload.addActionListener(this);
 		contentPanel.add(btnUpload);
 		
 		lblBookcode = new JLabel("Book Code");
@@ -225,20 +226,6 @@ public class AddUI extends JDialog implements ActionListener {
 		setVisible(true);
 		setLocationRelativeTo(null);		
 	}
-	
-	
-	public void getData()
-	{
-		
-		titleTF.getText();
-		bookCodeTF.getText();
-		authorTF.getText();
-		descTF.getText();
-		yearPublishedTF.getText();
-		
-		
-	}
-	
 	public boolean isFilled() {
 		
 		if(!fnameTF.getText().trim().equals("") && !middleTF.getText().trim().equals("") && !lnameTF.getText().trim().equals("") && !titleTF.getText().trim().equals("")) {
@@ -254,10 +241,7 @@ public class AddUI extends JDialog implements ActionListener {
 		String action = event.getActionCommand();
 		
 		if(action.equalsIgnoreCase("Cancel"))
-		{
-			System.out.println(book.getBookCode());
 			dispose();
-		}
 		else if(action.equalsIgnoreCase("Save"))
 		{
 			
@@ -286,7 +270,6 @@ public class AddUI extends JDialog implements ActionListener {
 					bookAuthor.setAuthorId(authorCode.getText());
 					
 					bookDA.AddBooks(connection, book, author,bookAuthor);
-					System.out.println("ediwow");
 					repaint();
 					revalidate();
 					dispose();
