@@ -31,7 +31,10 @@ public class BookBorrowedDA
 	
 	public BookBorrowedDA(Connection connection)
 	{
+		
 		selectedB = new SelectedBook();
+
+		bookb = new BookBorrowed();
 		this.connection=connection;
 	}
 	
@@ -91,7 +94,7 @@ public class BookBorrowedDA
 		}
 	}
 	
-	public void getHistory(Connection connection,User user)
+	public void getHistory(Connection connection)
 	{
 		this.connection=connection;
 		try 
@@ -99,16 +102,20 @@ public class BookBorrowedDA
 			
 			PreparedStatement ps = null;
 			String query;
-			
-			query="select * from bookborrowed";
+						
+			query="select * from bookborrow";
 
 			ps = connection.prepareStatement(query);
 			rs=ps.executeQuery();
 			
 			while(rs.next())
 			{
+			
+				bookb = new BookBorrowed();
+				selectedB = new SelectedBook();
+				
 				bookb.setTransNumber(rs.getString(1));
-				user.setUserId(rs.getString(2));
+				bookb.setUserID(rs.getString(2));
 				selectedB.setBookCode(rs.getString(3));
 				selectedB.setBookName(rs.getString(4));
 				selectedB.setBookAuthor(rs.getString(5));
@@ -116,8 +123,8 @@ public class BookBorrowedDA
 				bookb.setDueDate(rs.getTimestamp(7));
 				bookb.setReturnDate(rs.getTimestamp(8));
 				bookb.setPenalty(rs.getString(9));
+				bookb.setSelectedBooks(selectedB);
 				
-				selectedBList.add(selectedB);
 				bookBList.add(bookb);
 			}
 		}
@@ -127,11 +134,65 @@ public class BookBorrowedDA
 
 	}
 	
+	
+	
+	public void getUserHistory(Connection connection,User user)
+	{
+		
+		this.connection=connection;
+		try 
+		{
+			
+			PreparedStatement ps = null;
+			String query;
+						
+			query="select * from bookborrow where userID=?";
+
+			ps = connection.prepareStatement(query);
+			
+			ps.setString(1, user.getUserId());
+			
+			rs=ps.executeQuery();
+			
+			while(rs.next())
+			{
+			
+				bookb = new BookBorrowed();
+				selectedB = new SelectedBook();
+				
+				bookb.setTransNumber(rs.getString(1));
+				bookb.setUserID(rs.getString(2));
+				selectedB.setBookCode(rs.getString(3));
+				selectedB.setBookName(rs.getString(4));
+				selectedB.setBookAuthor(rs.getString(5));
+				bookb.setBorrowedDate(rs.getTimestamp(6));
+				bookb.setDueDate(rs.getTimestamp(7));
+				bookb.setReturnDate(rs.getTimestamp(8));
+				bookb.setPenalty(rs.getString(9));
+				bookb.setSelectedBooks(selectedB);
+				
+				bookBList.add(bookb);
+			}
+		}
+		catch(SQLException e) {
+			e.printStackTrace();	
+		}
+		
+		
+	}
+	
 	public void setSelectedBook(SelectedBook selected)
 	{
 		selectedBList.add(selected);
 	}
 			
+	
+	public List<BookBorrowed> getHistoryList()
+	{
+	
+		return bookBList;
+	}
+	
 	public List<SelectedBook> getSelectedBList()
 	{
 		return selectedBList;
