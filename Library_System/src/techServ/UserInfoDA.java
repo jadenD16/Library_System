@@ -3,6 +3,7 @@ package techServ;
 
 import java.sql.Connection;
 
+
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -17,7 +18,6 @@ import domain.UserInfo;
 public class UserInfoDA 
 {
 
-	private UserInfo userInfo;
 	private Department department;
 	private ProgStudy progStudy;
 	private Connection connection;
@@ -70,9 +70,7 @@ public class UserInfoDA
 	}
 	
 	public void addData(Connection connection,UserInfo userinfo) {
-		userInfoList = new ArrayList<>();
-	    
-		
+
 		this.connection=connection;
 		try 
 		{
@@ -91,7 +89,6 @@ public class UserInfoDA
 			ps.setString(5, userinfo.getContactNumber());
 			ps.setString(6, userinfo.getGender());
 			ps.setString(7, userinfo.getProgStudy());
-			System.out.println(userinfo.getProgStudy());
 			String[] deptCode = userinfo.getDepartment().split("\\(");
 			ps.setString(8, deptCode[0]);
 			
@@ -101,6 +98,7 @@ public class UserInfoDA
 			ps.executeUpdate();
 			userInfoList.add(userinfo);
 			RefreshList(connection);
+			
 		}
 		catch(SqlIntegrityConstraintViolationException e) {
 			System.out.println("Missing or Replicated Value Error");			
@@ -132,8 +130,6 @@ public class UserInfoDA
 			ps.setString(3, userinfo.getLastName());
 			ps.setString(4, userinfo.getContactNumber());
 			ps.setString(5, userinfo.getGender());
-			System.out.println(userinfo.getUserId().trim());
-			
 			
 			ps.setString(6, userinfo.getProgStudy());
 			String[] deptCode = userinfo.getDepartment().split("\\(");
@@ -177,9 +173,11 @@ public class UserInfoDA
 			 // update customerList
 			 userInfoList.remove(userinfo);	
 			 RefreshList(connection);
+			 
 			
 		}
 		catch(SqlIntegrityConstraintViolationException e) {
+			System.out.println(userinfo.getUserId());
 			System.out.println("Missing or Replicated Value Error");			
 		}
 		catch(SQLException e) {
@@ -212,6 +210,7 @@ public class UserInfoDA
 			recordPointer =0;
 		return userInfoList.get(recordPointer);
 	}
+	
 	public List<UserInfo> getUserInfoList(){
 		return userInfoList;
 	}

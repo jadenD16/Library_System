@@ -24,6 +24,7 @@ import javax.swing.table.JTableHeader;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumnModel;
 
+import domain.Author;
 import domain.Books;
 import domain.SelectedBook;
 import domain.User;
@@ -46,6 +47,7 @@ import java.awt.event.MouseListener;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 import java.awt.event.ActionEvent;
@@ -65,18 +67,20 @@ public class LibrarySystemMain extends JFrame implements ActionListener{
 	
 	private JLabel lblNewLabel_1,lblFilterby,lblSearch,lblprofile  ;
 	
-	private JButton btnUpdate, btnAdd, btnLogin,btnBorrowedBooks,btnManageBooks,btnViewHistory,btnManageUsers,btnBorrow ;
+	private JButton btnUpdate, btnAdd, btnLogin,btnBorrowedBooks,btnSearch,btnManageBooks,btnViewHistory,btnManageUsers,btnBorrow ;
 	
 	private Connection connection;
 	
 	private String[] tableHeader;
 	
 	private BooksDA booksDA;
-	
+	private Books book;
+	private Author author;
 	private DefaultTableModel tableModel;
 	private TableColumnModel columnModel;
 	private UserInformationUI userinformationUI;
 	private List<Books> bookList;
+	private ArrayList<Books> bookSearchList;
 	private AddUI addUI;
 	private LoginUI loginUI;
 	private User user;
@@ -176,22 +180,21 @@ public class LibrarySystemMain extends JFrame implements ActionListener{
 		textField.setColumns(10);
 		getContentPane().add(textField);
 		
+<<<<<<< HEAD
 		lblSearch = new JLabel("Search");
 		lblSearch.setForeground(new Color(245, 255, 250));
 		lblSearch.setFont(new Font("Segoe UI", Font.BOLD, 16));
 		lblSearch.setBounds(342, 185, 80, 26);
 		getContentPane().add(lblSearch);
+=======
+>>>>>>> 5f99ff5ac3dd78c920686b1ad0e9cbec75827c9f
 		
-		comboBox = new JComboBox();
-		comboBox.setFont(new Font("Arial",Font.PLAIN,14));
-		comboBox.setModel(new DefaultComboBoxModel(new String[]{"----","A-C","D-F","G-I","J-L","M-P","Q-S","T-V","W-Z"}));
-		comboBox.setBounds(425, 217, 89, 20);
-		getContentPane().add(comboBox);
 		
-		lblFilterby = new JLabel("Sort By:");
-		lblFilterby.setFont(new Font("Arial", Font.BOLD, 16));
-		lblFilterby.setBounds(341, 218, 80, 16);
-		getContentPane().add(lblFilterby);
+		btnSearch = new JButton("Search");	
+		btnSearch.setBounds(342, 185, 80, 26);
+		btnSearch.addActionListener(this);
+		getContentPane().add(btnSearch);
+	
 		
 		JLabel lblLibraryManagementSystem = new JLabel("LIBRARY MANAGEMENT SYSTEM");
 		lblLibraryManagementSystem.setBorder(new MatteBorder(0, 0, 4, 0, (Color) new Color(0, 0, 0)));
@@ -219,22 +222,75 @@ public class LibrarySystemMain extends JFrame implements ActionListener{
 		
 		if(action.equalsIgnoreCase("Manage Books"))
 		{
-			getContentPane().add(lblSearch);
+			getContentPane().add(btnSearch);
 			getContentPane().add(textField);
 			getContentPane().add(scrollPane);
 			getContentPane().add(btnAdd);
 			getContentPane().add(btnUpdate);
+<<<<<<< HEAD
 			getContentPane().add(comboBox);
 			getContentPane().add(lblFilterby);
+=======
+			getContentPane().add(lblBackground); 
+>>>>>>> 5f99ff5ac3dd78c920686b1ad0e9cbec75827c9f
 			
 			remove(userinformationUI);
 			repaint();
 			
 			fillBookTable();
 		}
+		else if(action.equalsIgnoreCase("Search")) {
+			tableHeader = new String[]{"Title","Author","Section",
+					"Shelf","Category","P.Y"};
+			
+			tableModel = new DefaultTableModel(tableHeader,0);
+			table.setModel(tableModel);
+			bookList= booksDA.getBookList();
+			
+			if(textField.getText().length() != 0 )
+			{
+				
+				if(isValidWord(textField.getText())) 
+				{
+					bookSearchList = new ArrayList<Books>();
+					bookSearchList.clear();
+					 
+					bookList= (ArrayList<Books>)booksDA.getBookList();
+					
+					for(Books book : booksDA.getBookList())
+					{
+						if(book.getBookName().toLowerCase().contains(textField.getText())) 
+						{
+															
+							String[] row = {book.getBookName(),book.getBookAuthor(),book.getSection(),book.getShelfNumber(),
+										  book.getCategory(),book.getYearPub()};
+							bookSearchList.add(book);
+							tableModel.addRow(row);
+						}
+						
+						
+					}	
+				}
+				else 
+				{
+					JOptionPane.showMessageDialog(null, "Incorrect Input");
+					fillBookTable();
+				}
+			}
+			else 
+			{
+				
+				fillBookTable();
+			}
+			renderTable();
+		}	
 		else if(action.equalsIgnoreCase("Add"))
-			 addUI = new AddUI(getConnection());
-		
+		{
+			book = booksDA.GetLastBookInfo();
+			 author = booksDA.GetLastAuthorInfo();
+			 addUI = new AddUI(connection);
+				
+		}
 		else if(action.equalsIgnoreCase("Manage Users")) 
 		{
 			manageUser();
@@ -244,8 +300,17 @@ public class LibrarySystemMain extends JFrame implements ActionListener{
 		else if(action.equalsIgnoreCase("login"))
 		{
 			loginUI = new LoginUI(getConnection());
+<<<<<<< HEAD
 		}	
 						
+=======
+				
+		else if(action == "Manage Books")
+			fillBookTable();
+		else if(action == "Manage Users") 
+			manageUser();
+	
+>>>>>>> 5f99ff5ac3dd78c920686b1ad0e9cbec75827c9f
 		else if(action.equals("Borrow"))
 		{
 			int row=table.getSelectedRow(),
@@ -284,11 +349,15 @@ public class LibrarySystemMain extends JFrame implements ActionListener{
 	
 	public void loggedIn(String userType, User user)
 	{
+<<<<<<< HEAD
 		
 		this.user = user;
 		
+=======
+>>>>>>> 5f99ff5ac3dd78c920686b1ad0e9cbec75827c9f
 		if(userType.equalsIgnoreCase("admin"))
 		{
+			
 			btnManageUsers.setText("Manage Users");
 			panel.add(btnManageUsers);
 			panel.add(btnManageBooks);
@@ -302,7 +371,10 @@ public class LibrarySystemMain extends JFrame implements ActionListener{
 			panel.add(btnBorrowedBooks);
 			panel.add(btnViewHistory);
 			panel.add(btnManageBooks);
+<<<<<<< HEAD
 			getContentPane().add(btnBorrow);
+=======
+>>>>>>> 5f99ff5ac3dd78c920686b1ad0e9cbec75827c9f
 		}
 		
 		
@@ -312,18 +384,28 @@ public class LibrarySystemMain extends JFrame implements ActionListener{
 	
 	
 	public void manageUser() {
-		remove(lblSearch);
+		remove(btnSearch);
 		remove(textField);
 		remove(scrollPane);
 		remove(btnAdd);
 		remove(btnUpdate);
+<<<<<<< HEAD
 		remove(comboBox);
 		remove(lblFilterby);
+=======
+		remove(lblBackground);
+>>>>>>> 5f99ff5ac3dd78c920686b1ad0e9cbec75827c9f
 		
 		getContentPane().add(userinformationUI);
 		repaint();
 		
 
+	}
+	public static boolean isValidWord(String book) {
+		if((book.charAt(0)+"").matches("[a-zA-Z0-9]"))
+			return true;
+
+		return false;
 	}
 
 	public Connection getConnection()
@@ -333,7 +415,7 @@ public class LibrarySystemMain extends JFrame implements ActionListener{
 			{
 				Class.forName("com.ibm.db2.jcc.DB2Driver");
 				connection = DriverManager.getConnection
-						("jdbc:db2://localhost:50000/library","sweetie", "medeys");
+						("jdbc:db2://localhost:50000/library","Edwin Javinar", "secret");
 			}
 			catch(ClassNotFoundException e1)
 			{

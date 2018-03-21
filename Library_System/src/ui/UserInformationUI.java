@@ -1,6 +1,7 @@
 package ui;
 
 import javax.swing.JPanel;
+
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 
@@ -11,15 +12,18 @@ import javax.swing.DefaultComboBoxModel;
 import javax.swing.ImageIcon;
 import javax.swing.JTable;
 import javax.swing.border.BevelBorder;
+import javax.swing.plaf.synth.SynthSeparatorUI;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
 
 import domain.Books;
 import domain.Department;
 import domain.ProgStudy;
+import domain.User;
 import domain.UserInfo;
 import techServ.DepartmentDA;
 import techServ.ProgStudyDA;
+import techServ.UserDA;
 import techServ.UserInfoDA;
 
 import java.awt.Font;
@@ -42,28 +46,33 @@ import com.toedter.calendar.JDateChooser;
 public class UserInformationUI extends JPanel implements ActionListener{
 	private UserInfoDA userinfoDA;
 	private UserInfo userinfo;
+	private User users;
 	private Connection connection;
 	private ProgStudy progStudy;
 	private ProgStudyDA progStudyDA;
 	private Department department;
 	private DepartmentDA departmentDA;
+	private UserDA userDA;
 	private LibrarySystemMain librarySystemMain;
 	private String[] tableHeader;
+	
 	private DefaultTableModel tableModel;
 	private TableColumnModel columnModel;
-	private JTextField userIdTF,progStudyTF ,contactTF,birthdayTF,nameTF,deptTF,yearLevelTF,genderTF,searchTF,textField;
-	private JButton btnFirst,btnPrevious,btnLast,btnNext,btnDelete;
-	private JButton btnAdd,btnUpdate,btnSearch,btnSave,btnCancel;
-	private JLabel lblProgStudy,lblYearLevel,lblGender;
+	
+	private JTextField lnameTF,middleTF,fnameTF,userIdTF,progStudyTF ,contactTF,birthdayTF,nameTF,deptTF,yearLevelTF,genderTF,searchTF,textField,userTypeTF;
+	private JButton btnFirst,btnPrevious,btnLast,btnNext,btnDelete,btnAdd,btnUpdate,btnSearch,btnSave,btnCancel;
+	private JLabel lblProgStudy,lblYearLevel,lblGender,UserType;
 	private JRadioButton radioButtonMale,radioButtonFemale;
-	private JComboBox progBox,deptBox,yearLevelBox;
+	private JComboBox progBox,deptBox,yearLevelBox,userTypeBox;
 	private ButtonGroup bg;
 	private JDateChooser dateChooser;
 	private String buttonIdentifier;
-	private JTextField fnameTF;
-	private JTextField middleTF;
-	private JTextField lnameTF;
 	private JTable table;
+	private JLabel lblPassword;
+	private JLabel userName;
+	private JTextField userNameTF;
+	private JTextField passwordTF;
+
 	public UserInformationUI(Connection connection) {
 		this.connection = connection;
 		
@@ -79,7 +88,7 @@ public class UserInformationUI extends JPanel implements ActionListener{
 		
 		ProgStudyDA progStudyDA = new ProgStudyDA(connection);
 		DepartmentDA departmentDA = new DepartmentDA(connection);
-		
+
 		userIdTF = new JTextField();
 		userIdTF.setBounds(316, 38, 170, 26);
 		userIdTF.setEditable(false);
@@ -96,7 +105,6 @@ public class UserInformationUI extends JPanel implements ActionListener{
 		progStudyTF.setColumns(10);
 		progStudyTF.setBounds(777, 78, 274, 26);
 		add(progStudyTF);
-		
 		
 		
 		JLabel lblUserId = new JLabel("User ID:");
@@ -176,13 +184,13 @@ public class UserInformationUI extends JPanel implements ActionListener{
 		dateChooser.setDateFormatString("yyyy-MM-d");
 		
 		searchTF = new JTextField();
-		searchTF.setBounds(110, 223, 267, 23);
+		searchTF.setBounds(110, 225, 267, 23);
 		add(searchTF);
 		searchTF.setColumns(10);
 		
 		btnSearch = new JButton("Search");
 		btnSearch.setFont(new Font("Segoe UI Light", Font.PLAIN, 14));
-		btnSearch.setBounds(22, 221, 89, 26);
+		btnSearch.setBounds(22, 223, 89, 26);
 		btnSearch.addActionListener(this);
 		add(btnSearch);
 		
@@ -264,10 +272,18 @@ public class UserInformationUI extends JPanel implements ActionListener{
 		
 		yearLevelBox = new JComboBox();
 		yearLevelBox.setBounds(777,160,274,26);
-		yearLevelBox.setModel(new DefaultComboBoxModel(new String[]{"1st","2nd","3rd","4th","5th"}));
+		yearLevelBox.setModel(new DefaultComboBoxModel(new String[]{"1st","2nd","3rd","4th","5th","N/A"}));
 		add(yearLevelBox);
 		
-				
+		userTypeBox = new JComboBox();
+		userTypeBox.setBounds(777,194,274,26);
+		userTypeBox.setModel(new DefaultComboBoxModel(new String[]{"Admin","User"}));
+		
+		UserType = new JLabel("User Type:");
+		UserType.setHorizontalAlignment(SwingConstants.LEFT);
+		UserType.setFont(new Font("Segoe UI Light", Font.PLAIN, 16));
+		UserType.setBounds(637, 197, 130, 26);
+	
 		
 		radioButtonMale = new JRadioButton("M");
 		radioButtonMale.setBounds(544, 83, 35, 23);
@@ -293,6 +309,27 @@ public class UserInformationUI extends JPanel implements ActionListener{
 		lnameTF.setBounds(402, 78, 84, 26);
 		lnameTF.addActionListener(this);
 		
+		lblPassword = new JLabel("Password:");
+		lblPassword.setHorizontalAlignment(SwingConstants.LEFT);
+		lblPassword.setFont(new Font("Segoe UI Light", Font.PLAIN, 16));
+		lblPassword.setBounds(637, 197, 130, 26);
+		
+		userName = new JLabel("Username:");
+		userName.setHorizontalAlignment(SwingConstants.LEFT);
+		userName.setFont(new Font("Segoe UI Light", Font.PLAIN, 16));
+		userName.setBounds(201, 197, 130, 26);
+		
+		userNameTF = new JTextField();
+		userNameTF.setEditable(true);
+		userNameTF.setColumns(10);
+		userNameTF.setBounds(318, 197, 285, 26);
+		
+		passwordTF = new JTextField();
+		passwordTF.setEditable(true);
+		passwordTF.setColumns(10);
+		passwordTF.setBounds(777, 197, 274, 26);
+		
+		
 		ButtonGroup bg = new ButtonGroup();
 		bg.add(radioButtonMale);
 		bg.add(radioButtonFemale);
@@ -300,6 +337,9 @@ public class UserInformationUI extends JPanel implements ActionListener{
 		userinfo = new UserInfo();
 		userinfoDA = new UserInfoDA(connection);
 		userinfo = userinfoDA.GetFirstUserInfo();
+		users = new User();
+		userDA = new UserDA(connection);
+		users = userDA.GetFirstUser();
 		getDisplayUser();
 		
 		
@@ -314,27 +354,27 @@ public class UserInformationUI extends JPanel implements ActionListener{
 		String action = event.getActionCommand();
 		
 		if(action.equals("<<")) {
+			users = userDA.GetFirstUser();
 			userinfo = userinfoDA.GetFirstUserInfo();
 			getDisplayUser();
-			System.out.println("napipindot mo to << ");
 			
 		}
 		else if(action.equals(">>")) {
+			users = userDA.GetLastUser();
 			userinfo=userinfoDA.GetLastUserInfo();
 			getDisplayUser();
-			System.out.println("napipindot mo to >> ");
 			
 		}
 		else if(action.equals("Next")) {
+			users = userDA.getNextUser();
 			userinfo = userinfoDA.getNextUserInfo();
 			getDisplayUser();
-			System.out.println("napipindot mo to next ");
 			
 		}
 		else if(action.equals("Previous")) {
+			users = userDA.getPrevious();
 			userinfo = userinfoDA.getPreviousCustomer();		
 			getDisplayUser();
-			System.out.println("napipindot mo to previous ");
 			
 		}
 		else if(action.equals("Add")) {
@@ -342,33 +382,49 @@ public class UserInformationUI extends JPanel implements ActionListener{
 			setEditable(true);
 			EnableNavButtons(false);
 			setEditableTable(false);
+			add(userTypeBox);
+			add(UserType);
 			AddDisables(false);
 			AddEnables(true);
+
 			AddFunction();
 			repaint();
 			revalidate();
+			
 			
 			buttonIdentifier = "Add";
 			
 		}
 		else if(action.equalsIgnoreCase("Update")) {
+			add(userName);
+			add(userNameTF);
+			add(passwordTF);
+			add(lblPassword);
 			
 			fnameTF.setText(userinfo.getFirstName());
 			middleTF.setText(userinfo.getMiddleInitial());
 			lnameTF.setText(userinfo.getLastName());
+
+			userNameTF.setText(users.getUserName());
+			passwordTF.setText(users.getPassWord());
 			
 			if(userinfo.getGender().equalsIgnoreCase("M"))
 				radioButtonMale.setSelected(true);
 			else
 				radioButtonFemale.setSelected(true);
-			
+
 			dateChooser.setDate(Date.valueOf(userinfo.getBirthday()));
+			progBox.setSelectedItem(userinfo.getProgStudy());
+			deptBox.setSelectedItem(userinfo.getDepartment());
+			yearLevelBox.setSelectedItem(userinfo.getYearLevel());
 			
 			setEditable(true);
 			EnableNavButtons(false);
 			setEditableTable(false);
 			AddDisables(false);
 			AddEnables(true);
+			
+			
 			repaint();
 			revalidate();
 			AddFunction();
@@ -397,6 +453,8 @@ public class UserInformationUI extends JPanel implements ActionListener{
 							if((contactTF.getText().matches("^[0-9]*$")) && contactTF.getText().length() == 11) 
 							{
 									userinfo = new UserInfo();
+									users = new User();
+									
 									userinfo.setUserId(userIdTF.getText());
 									String[] name=nameTF.getText().replaceAll(",", " ").split(" ");
 									userinfo.setFirstName(fnameTF.getText());
@@ -417,8 +475,13 @@ public class UserInformationUI extends JPanel implements ActionListener{
 									else
 										userinfo.setGender("F");
 									
+									users.setUserId(userIdTF.getText());
+									users.setUserName(fnameTF.getText().substring(0, 1) + middleTF.getText().substring(0, 1) + lnameTF.getText());
+									users.setPassWord(fnameTF.getText().substring(0, 1) + middleTF.getText().substring(0, 1) + lnameTF.getText());
+									users.setUserType(userTypeBox.getSelectedItem().toString());
+								
 									userinfoDA.addData(connection, userinfo);
-										
+									userDA.AddUser(connection, users);
 									setEditable(false);
 									EnableNavButtons(true);
 									setEditableTable(true);
@@ -426,6 +489,8 @@ public class UserInformationUI extends JPanel implements ActionListener{
 									AddEnables(false);
 									remove(radioButtonFemale);
 									remove(radioButtonMale);
+									remove(UserType);
+									remove(userTypeBox);
 									userinfo=userinfoDA.GetLastUserInfo();
 									getDisplayUser();
 									repaint();
@@ -446,10 +511,12 @@ public class UserInformationUI extends JPanel implements ActionListener{
 			{
 				if(isFilled() && ((radioButtonMale.isSelected() == true)||(radioButtonFemale.isSelected() == true))) 
 				{
-						if((fnameTF.getText().matches("^[a-zA-Z]*$")) && (middleTF.getText().matches("^[a-zA-Z]*$")) && (lnameTF.getText().matches("^[a-zA-Z]*$"))) 
+						if((fnameTF.getText().matches("^[a-zA-Z.]*$")) && (middleTF.getText().matches("^[a-zA-Z.]*$")) && (lnameTF.getText().matches("^[a-zA-Z.]*$"))) 
 						{
 							if( (contactTF.getText().matches("^[0-9]*$")) && contactTF.getText().length() == 11) { 
 								userinfo = new UserInfo();
+								users = new User();
+								
 								userinfo.setUserId(userIdTF.getText());
 								String[] name=nameTF.getText().replaceAll(",", " ").split(" ");
 				
@@ -458,7 +525,7 @@ public class UserInformationUI extends JPanel implements ActionListener{
 								userinfo.setLastName(lnameTF.getText());
 								userinfo.setContactNumber(contactTF.getText());
 								String[] progStudy = progBox.getSelectedItem().toString().split("\\(");
-								System.out.println(progStudy[0]);
+
 								userinfo.setProgStudy(progStudy[0]);
 								userinfo.setDepartment(deptBox.getSelectedItem().toString());
 								userinfo.setYearLevel(yearLevelBox.getSelectedItem().toString());
@@ -471,7 +538,16 @@ public class UserInformationUI extends JPanel implements ActionListener{
 								else
 									userinfo.setGender("F");
 								
+								
+								users.setUserId(userIdTF.getText());
+								users.setUserName(userNameTF.getText());
+								users.setPassWord(passwordTF.getText());
+								users.setUserType(userTypeBox.getSelectedItem().toString());
+								
+
+								userDA.EditUser(connection, users);
 								userinfoDA.EditData(connection, userinfo);
+								
 								setEditable(false);
 								EnableNavButtons(true);
 								setEditableTable(true);
@@ -479,8 +555,12 @@ public class UserInformationUI extends JPanel implements ActionListener{
 								AddEnables(false);
 								remove(radioButtonFemale);
 								remove(radioButtonMale);
+								remove(userName);
+								remove(userNameTF);
+								remove(lblPassword);
+								remove(passwordTF);
+
 								getDisplayUser();
-								
 								repaint();
 								revalidate();
 							}
@@ -496,6 +576,9 @@ public class UserInformationUI extends JPanel implements ActionListener{
 					JOptionPane.showMessageDialog(null, "Please Fill Up the Blanks");
 			}
 			else if(buttonIdentifier.equalsIgnoreCase("Delete")){
+				userDA.DeleteData(connection, users);
+				users = userDA.GetLastUser();
+				
 				userinfoDA.DeleteData(connection, userinfo);
 				userinfo=userinfoDA.GetLastUserInfo();
 				getDisplayUser();
@@ -512,6 +595,12 @@ public class UserInformationUI extends JPanel implements ActionListener{
 			setEditableTable(true);
 			remove(radioButtonFemale);
 			remove(radioButtonMale);
+			remove(UserType);
+			remove(userTypeBox);
+			remove(userName);
+			remove(userNameTF);
+			remove(lblPassword);
+			remove(passwordTF);
 			AddDisables(true);
 			AddEnables(false);
 		}
@@ -543,7 +632,6 @@ public class UserInformationUI extends JPanel implements ActionListener{
 		lnameTF.setVisible(input);
 		progBox.setVisible(input);
 		deptBox.setVisible(input);
-		yearLevelBox.setVisible(input);
 		btnSave.setVisible(input);
 		btnCancel.setVisible(input);
 	}
@@ -572,6 +660,8 @@ public class UserInformationUI extends JPanel implements ActionListener{
 		progStudyTF.setText(" "+userinfo.getProgStudy());
 		deptTF.setText(" "+userinfo.getDepartment());
 		yearLevelTF.setText(" "+userinfo.getYearLevel());
+		userNameTF.setText(" "+users.getUserName());
+		passwordTF.setText(" "+ users.getPassWord());
 	
 		
 	}
@@ -606,15 +696,12 @@ public class UserInformationUI extends JPanel implements ActionListener{
 	public void setEditableTable(boolean input) {
 		searchTF.setEditable(input);
 		textField.setEditable(input);
-		
 	}
 	public void EnableNavButtons(boolean choice) {
 		btnFirst.setEnabled(choice);
 		btnNext.setEnabled(choice);
 		btnPrevious.setEnabled(choice);
 		btnLast.setEnabled(choice);
-		
-	
 	}
 	public boolean isFilled() {
 		
@@ -624,5 +711,4 @@ public class UserInformationUI extends JPanel implements ActionListener{
 		
 		return false;
 	}
-	
 }
