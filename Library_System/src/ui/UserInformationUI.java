@@ -12,6 +12,7 @@ import javax.swing.DefaultComboBoxModel;
 import javax.swing.ImageIcon;
 import javax.swing.JTable;
 import javax.swing.border.BevelBorder;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.plaf.synth.SynthSeparatorUI;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
@@ -27,6 +28,7 @@ import techServ.UserDA;
 import techServ.UserInfoDA;
 
 import java.awt.Font;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.sql.Connection;
 import java.sql.Date;
@@ -38,9 +40,13 @@ import java.util.List;
 import javax.swing.JTextField;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
+import java.io.File;
+
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JComboBox;
+import javax.swing.JFileChooser;
+
 import com.toedter.calendar.JDateChooser;
 
 public class UserInformationUI extends JPanel implements ActionListener{
@@ -60,8 +66,8 @@ public class UserInformationUI extends JPanel implements ActionListener{
 	private TableColumnModel columnModel;
 	
 	private JTextField lnameTF,middleTF,fnameTF,userIdTF,progStudyTF ,contactTF,birthdayTF,nameTF,deptTF,yearLevelTF,genderTF,searchTF,textField,userTypeTF;
-	private JButton btnFirst,btnPrevious,btnLast,btnNext,btnDelete,btnAdd,btnUpdate,btnSearch,btnSave,btnCancel;
-	private JLabel lblProgStudy,lblYearLevel,lblGender,UserType;
+	private JButton btnUpload,btnFirst,btnPrevious,btnLast,btnNext,btnDelete,btnAdd,btnUpdate,btnSearch,btnSave,btnCancel;
+	private JLabel lblPicture,lblProgStudy,lblYearLevel,lblGender,UserType;
 	private JRadioButton radioButtonMale,radioButtonFemale;
 	private JComboBox progBox,deptBox,yearLevelBox,userTypeBox;
 	private ButtonGroup bg;
@@ -79,12 +85,13 @@ public class UserInformationUI extends JPanel implements ActionListener{
 		setLayout(null);
 		setBounds(273,177,1071,502);
 		
-		JLabel lblPicture = new JLabel("New label");
-		lblPicture.setIcon(new ImageIcon("C:\\Users\\Edwin odewyn\\Pictures\\greeetin picture.jpg"));
+		lblPicture = new JLabel("New label");
 		lblPicture.setHorizontalAlignment(SwingConstants.CENTER);
 		lblPicture.setBackground(Color.BLACK);
 		lblPicture.setBounds(22, 38, 169, 157);
 		add(lblPicture);
+		
+		
 		
 		ProgStudyDA progStudyDA = new ProgStudyDA(connection);
 		DepartmentDA departmentDA = new DepartmentDA(connection);
@@ -272,7 +279,7 @@ public class UserInformationUI extends JPanel implements ActionListener{
 		
 		yearLevelBox = new JComboBox();
 		yearLevelBox.setBounds(777,160,274,26);
-		yearLevelBox.setModel(new DefaultComboBoxModel(new String[]{"1st","2nd","3rd","4th","5th","N/A"}));
+		yearLevelBox.setModel(new DefaultComboBoxModel(new String[]{"1st","2nd","3rd","4th","5th"}));
 		add(yearLevelBox);
 		
 		userTypeBox = new JComboBox();
@@ -308,6 +315,10 @@ public class UserInformationUI extends JPanel implements ActionListener{
 		lnameTF.setColumns(10);
 		lnameTF.setBounds(402, 78, 84, 26);
 		lnameTF.addActionListener(this);
+		
+		btnUpload = new JButton("Upload");
+		btnUpload.setBounds(22, 201, 171, 23);
+		btnUpload.addActionListener(this);
 		
 		lblPassword = new JLabel("Password:");
 		lblPassword.setHorizontalAlignment(SwingConstants.LEFT);
@@ -357,25 +368,47 @@ public class UserInformationUI extends JPanel implements ActionListener{
 			users = userDA.GetFirstUser();
 			userinfo = userinfoDA.GetFirstUserInfo();
 			getDisplayUser();
+			System.out.println("napipindot mo to << ");
 			
 		}
 		else if(action.equals(">>")) {
 			users = userDA.GetLastUser();
 			userinfo=userinfoDA.GetLastUserInfo();
 			getDisplayUser();
+			System.out.println("napipindot mo to >> ");
 			
 		}
 		else if(action.equals("Next")) {
 			users = userDA.getNextUser();
 			userinfo = userinfoDA.getNextUserInfo();
 			getDisplayUser();
+			System.out.println("napipindot mo to next ");
 			
 		}
 		else if(action.equals("Previous")) {
 			users = userDA.getPrevious();
 			userinfo = userinfoDA.getPreviousCustomer();		
 			getDisplayUser();
+			System.out.println("napipindot mo to previous ");
 			
+		}
+		else if(action.equalsIgnoreCase("Upload")) {
+			 JFileChooser file = new JFileChooser();
+	          file.setCurrentDirectory(new File(System.getProperty("user.home")));
+	          //filter the files
+	          FileNameExtensionFilter filter = new FileNameExtensionFilter("*.Images", "jpg","gif","png");
+	          file.addChoosableFileFilter(filter);
+	          int result = file.showSaveDialog(null);
+	          if(result == JFileChooser.APPROVE_OPTION){
+	        	 
+	        	 
+	          File selectedFile = file.getSelectedFile();
+	          String path = selectedFile.getAbsolutePath();
+	          lblPicture.setIcon(ResizeImage(path));
+	          }
+	          else if(result == JFileChooser.CANCEL_OPTION){
+	              System.out.println("No File Select");
+	          }
 		}
 		else if(action.equals("Add")) {
 			ClearTextField();
@@ -384,6 +417,7 @@ public class UserInformationUI extends JPanel implements ActionListener{
 			setEditableTable(false);
 			add(userTypeBox);
 			add(UserType);
+			add(btnUpload);
 			AddDisables(false);
 			AddEnables(true);
 
@@ -408,6 +442,7 @@ public class UserInformationUI extends JPanel implements ActionListener{
 			userNameTF.setText(users.getUserName());
 			passwordTF.setText(users.getPassWord());
 			
+			System.out.println(users.getPassWord() + "@userinformationUI line 414");
 			if(userinfo.getGender().equalsIgnoreCase("M"))
 				radioButtonMale.setSelected(true);
 			else
@@ -511,7 +546,7 @@ public class UserInformationUI extends JPanel implements ActionListener{
 			{
 				if(isFilled() && ((radioButtonMale.isSelected() == true)||(radioButtonFemale.isSelected() == true))) 
 				{
-						if((fnameTF.getText().matches("^[a-zA-Z.]*$")) && (middleTF.getText().matches("^[a-zA-Z.]*$")) && (lnameTF.getText().matches("^[a-zA-Z.]*$"))) 
+						if((fnameTF.getText().matches("^[a-zA-Z]*$")) && (middleTF.getText().matches("^[a-zA-Z]*$")) && (lnameTF.getText().matches("^[a-zA-Z]*$"))) 
 						{
 							if( (contactTF.getText().matches("^[0-9]*$")) && contactTF.getText().length() == 11) { 
 								userinfo = new UserInfo();
@@ -538,10 +573,11 @@ public class UserInformationUI extends JPanel implements ActionListener{
 								else
 									userinfo.setGender("F");
 								
-								
 								users.setUserId(userIdTF.getText());
 								users.setUserName(userNameTF.getText());
 								users.setPassWord(passwordTF.getText());
+								System.out.println(users.getUserId() +"@userinformationUI line 545");
+								System.out.println(passwordTF.getText() +"@userinformationUI lne 546");
 								users.setUserType(userTypeBox.getSelectedItem().toString());
 								
 
@@ -597,6 +633,7 @@ public class UserInformationUI extends JPanel implements ActionListener{
 			remove(radioButtonMale);
 			remove(UserType);
 			remove(userTypeBox);
+			remove(btnUpload);
 			remove(userName);
 			remove(userNameTF);
 			remove(lblPassword);
@@ -624,7 +661,6 @@ public class UserInformationUI extends JPanel implements ActionListener{
 		btnUpdate.setVisible(input);
 		btnAdd.setVisible(input);
 		btnDelete.setVisible(input);
-		
 	}
 	public void AddEnables(boolean input) {
 		fnameTF.setVisible(input);
@@ -642,12 +678,7 @@ public class UserInformationUI extends JPanel implements ActionListener{
 		add(middleTF);
 		add(lnameTF);
 		add(fnameTF);
-
 	}
-	
-	
-
-	
 	public void getDisplayUser() {
 		
 		
@@ -711,4 +742,12 @@ public class UserInformationUI extends JPanel implements ActionListener{
 		
 		return false;
 	}
+	public ImageIcon ResizeImage(String ImagePath)
+    {
+        ImageIcon picture = new ImageIcon(ImagePath);
+        Image img = picture.getImage();
+        Image newImg = img.getScaledInstance(lblPicture.getWidth(), lblPicture.getHeight(), Image.SCALE_SMOOTH);
+        ImageIcon image = new ImageIcon(newImg);
+        return image;
+    }
 }

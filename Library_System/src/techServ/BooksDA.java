@@ -148,6 +148,52 @@ public class BooksDA
 		}
 				
 	}
+	//TODO EDIT BOOK
+	
+	public void EditBooks(Connection connection,Books book,Author author) {
+		
+		bookList = new ArrayList<>();
+	    authorList = new ArrayList<>();
+		this.connection=connection;
+		try 
+		{
+			
+			PreparedStatement ps = null;
+			String query,query1;
+			
+			query="Update  Author set firstName=?,middleInitial=?,lastName=? where authorId=?";
+
+			ps = connection.prepareStatement(query);
+			ps.setString(1, author.getFname());
+			ps.setString(2, author.getMiddleInitial());
+			ps.setString(3, author.getLname());
+			
+			
+			ps.executeUpdate();
+			RefreshList(connection);
+
+			query1 ="Update Book set bookname=?,sectionCode=?,shelfNumber=?,categoryCode=?,publishYear=? where BookCode=?";
+			ps = connection.prepareStatement(query1);
+			
+			ps.setString(1, book.getBookName());
+			ps.setString(2, book.getSection());
+			ps.setString(3, book.getShelfNumber());
+			ps.setString(4, book.getCategory());
+			ps.setString(5, book.getYearPub());
+			ps.setString(6, book.getBookCode());
+			
+			System.out.println(book.getBookCode());
+			ps.executeUpdate();
+			RefreshList(connection);
+		}
+		catch(SqlIntegrityConstraintViolationException e) {
+			System.out.println("Missing or Replicated Value Error");			
+		}
+		catch(SQLException e) {
+			System.out.print("Something is wrong in db or queue....");
+		}
+				
+	}
 	public void RefreshList(Connection connection)
 	{
 		bookAuthorList = new ArrayList<>();

@@ -71,7 +71,7 @@ public class LibrarySystemMain extends JFrame implements ActionListener{
 	private Connection connection;
 	
 	private String[] tableHeader;
-	
+	private	UpdateUI updateUI; 
 	private BooksDA booksDA;
 	private Books book;
 	private Author author;
@@ -164,6 +164,7 @@ public class LibrarySystemMain extends JFrame implements ActionListener{
 		
 		btnUpdate = new JButton("UPDATE");
 		btnUpdate.setFont(new Font("Segoe UI", Font.BOLD, 20));
+		btnUpdate.addActionListener(this);
 		btnUpdate.setBounds(875, 615, 111, 35);
 		 
 		btnAdd = new JButton("ADD");
@@ -275,10 +276,13 @@ public class LibrarySystemMain extends JFrame implements ActionListener{
 		}	
 		else if(action.equalsIgnoreCase("Add"))
 		{
+			addUI = new AddUI(connection);
 			book = booksDA.GetLastBookInfo();
-			 author = booksDA.GetLastAuthorInfo();
-			 addUI = new AddUI(connection);
+			author = booksDA.GetLastAuthorInfo();
 				
+		}
+		else if(action.equalsIgnoreCase("Update")) {
+			updateUI = new UpdateUI(connection);
 		}
 		else if(action.equalsIgnoreCase("Manage Users")) 
 		{

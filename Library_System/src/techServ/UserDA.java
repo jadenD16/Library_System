@@ -203,7 +203,7 @@ public class UserDA
 			String query;
 			query = "Select * from Users";
 			ps= connection.prepareStatement(query);
-						
+								
 			rs = ps.executeQuery();
 			
 			while(rs.next())
