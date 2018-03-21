@@ -13,6 +13,7 @@ import com.ibm.db2.jcc.am.SqlIntegrityConstraintViolationException;
 
 import domain.Department;
 import domain.ProgStudy;
+import domain.User;
 import domain.UserInfo;
 
 public class UserInfoDA 
@@ -26,23 +27,41 @@ public class UserInfoDA
 	private UserInfo userinfo;
 	private Integer recordPointer = 0;
 	
-	public UserInfoDA(Connection connection) 
+	public UserInfoDA(Connection connection,User user) 
 	{
 	
 		
 		userInfoList = new ArrayList<UserInfo>();
 		
 		this.connection=connection;
+		
 		try 
 		{
 			
 			PreparedStatement ps = null;
 			String query;
+						
+			if(user.getUserType().equalsIgnoreCase("Admin"))
+			{
+				query="select userinfo.userid,userinfo.firstname,userinfo.middleinitial,userinfo.lastname,userinfo.contactnumber,"
+						+ "userinfo.gender,userinfo.yearlevel,userinfo.birthday,userinfo.userpic,userinfo.progcode,progStudy.progName,userinfo.deptCode,department.deptName from userinfo JOIN department ON userinfo.deptCode = department.deptCode JOIN progStudy ON userinfo.progCode=progStudy.progCode";
+				ps = connection.prepareStatement(query);
+				rs=ps.executeQuery();
+			}	
 			
-			query="select userinfo.userid,userinfo.firstname,userinfo.middleinitial,userinfo.lastname,userinfo.contactnumber,userinfo.gender,userinfo.yearlevel,userinfo.birthday,userinfo.userpic,userinfo.progcode,progStudy.progName,userinfo.deptCode,department.deptName from userinfo JOIN department ON userinfo.deptCode = department.deptCode JOIN progStudy ON userinfo.progCode=progStudy.progCode";
+			else
+			{
+				query="select userinfo.userid,userinfo.firstname,userinfo.middleinitial,userinfo.lastname,userinfo.contactnumber,"
+						+ "userinfo.gender,userinfo.yearlevel,userinfo.birthday,userinfo.userpic,userinfo.progcode,progStudy.progName,userinfo.deptCode,department.deptName from userinfo JOIN department ON userinfo.deptCode = department.deptCode JOIN progStudy ON userinfo.progCode=progStudy.progCode"
+						+ " where userinfo.userid=?" ;
+				ps = connection.prepareStatement(query);
+				ps.setString(1, user.getUserId());
+				
 
-			ps = connection.prepareStatement(query);
-			rs=ps.executeQuery();
+				rs=ps.executeQuery();
+			}
+				
+			ps.setString(1, user.getUserId());
 			
 			while(rs.next()) {
 				
@@ -185,7 +204,6 @@ public class UserInfoDA
 		}
 			
 	}
-	
 
 	public UserInfo GetFirstUserInfo() { 
 		recordPointer = 0;

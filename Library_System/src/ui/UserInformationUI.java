@@ -20,11 +20,14 @@ import javax.swing.table.TableColumnModel;
 
 import org.apache.commons.io.FileUtils;
 
+import domain.BookBorrowed;
 import domain.Books;
 import domain.Department;
 import domain.ProgStudy;
+import domain.SelectedBook;
 import domain.User;
 import domain.UserInfo;
+import techServ.BookBorrowedDA;
 import techServ.DepartmentDA;
 import techServ.ProgStudyDA;
 import techServ.UserDA;
@@ -41,6 +44,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JTextField;
+import javax.swing.ListSelectionModel;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -52,6 +56,8 @@ import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 
 import com.toedter.calendar.JDateChooser;
+import javax.swing.JTabbedPane;
+import javax.swing.border.MatteBorder;
 
 public class UserInformationUI extends JPanel implements ActionListener{
 	private UserInfoDA userinfoDA;
@@ -62,14 +68,18 @@ public class UserInformationUI extends JPanel implements ActionListener{
 	private ProgStudyDA progStudyDA;
 	private Department department;
 	private DepartmentDA departmentDA;
+	private User user;
 	private UserDA userDA;
 	private LibrarySystemMain librarySystemMain;
 	private String[] tableHeader;
-	
+	private BookBorrowed bookBorrow;
+	private JScrollPane scrollPane;	
+	private SelectedBook selected;
+	private BookBorrowedDA bookBorrowedDA;
 	private DefaultTableModel tableModel;
 	private TableColumnModel columnModel;
 	private String path;
-	private JTextField lnameTF,middleTF,fnameTF,userIdTF,progStudyTF ,contactTF,birthdayTF,nameTF,deptTF,yearLevelTF,genderTF,searchTF,textField,userTypeTF;
+	private JTextField lnameTF,middleTF,fnameTF,userIdTF,progStudyTF ,contactTF,birthdayTF,nameTF,deptTF,yearLevelTF,genderTF,searchTF,userTypeTF;
 	private JButton btnUpload,btnFirst,btnPrevious,btnLast,btnNext,btnDelete,btnAdd,btnUpdate,btnSearch,btnSave,btnCancel;
 	private JLabel lblPicture,lblProgStudy,lblYearLevel,lblGender,UserType;
 	private JRadioButton radioButtonMale,radioButtonFemale;
@@ -82,8 +92,8 @@ public class UserInformationUI extends JPanel implements ActionListener{
 	private JLabel userName;
 	private JTextField userNameTF;
 	private JTextField passwordTF;
-
-	public UserInformationUI(Connection connection) {
+	private List<BookBorrowed> bookBorrowedList;
+	public UserInformationUI(Connection connection, User user) {
 		this.connection = connection;
 		
 		setLayout(null);
@@ -91,6 +101,7 @@ public class UserInformationUI extends JPanel implements ActionListener{
 		setBackground(UIManager.getColor("Button.shadow"));
 		
 		lblPicture = new JLabel("New label");
+		lblPicture.setBorder(new MatteBorder(2, 2, 2, 2, (Color) Color.WHITE));
 		lblPicture.setHorizontalAlignment(SwingConstants.CENTER);
 		lblPicture.setBackground(Color.BLACK);
 		lblPicture.setBounds(22, 38, 176, 157);
@@ -205,11 +216,6 @@ public class UserInformationUI extends JPanel implements ActionListener{
 		btnSearch.setBounds(22, 223, 89, 26);
 		btnSearch.addActionListener(this);
 		add(btnSearch);
-		
-		textField = new JTextField();
-		textField.setBounds(22, 258, 643, 219);
-		add(textField);
-		textField.setColumns(10);
 		
 		btnFirst = new JButton("<<");
 		btnFirst.setFont(new Font("Segoe UI Light", Font.PLAIN, 14));
@@ -327,6 +333,25 @@ public class UserInformationUI extends JPanel implements ActionListener{
 		btnUpload = new JButton("Upload");
 		btnUpload.setBounds(22, 201, 171, 23);
 		btnUpload.addActionListener(this);
+	
+					
+			table = new JTable()
+			{
+			    public boolean getScrollableTracksViewportWidth()
+			    {
+			        return getPreferredSize().width < getParent().getWidth();
+			    }
+			};
+			
+			table.setOpaque(false);
+			table.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
+			table.getTableHeader().setReorderingAllowed(false);
+			scrollPane = new JScrollPane(table,JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+			scrollPane.setBorder(new BevelBorder(BevelBorder.RAISED, new Color(153, 153, 153), new Color(153, 153, 153), new Color(153, 153, 153), new Color(153, 153, 153)));
+			scrollPane.setEnabled(false);
+			scrollPane.setOpaque(false);
+			scrollPane.setBounds(22, 260, 643, 217);
+			add(scrollPane);
 		
 		lblPassword = new JLabel("Password:");
 		lblPassword.setHorizontalAlignment(SwingConstants.LEFT);
@@ -354,14 +379,27 @@ public class UserInformationUI extends JPanel implements ActionListener{
 		bg.add(radioButtonFemale);
 		
 		userinfo = new UserInfo();
-		userinfoDA = new UserInfoDA(connection);
+		userinfoDA = new UserInfoDA(connection, user);
 		userinfo = userinfoDA.GetFirstUserInfo();
 		users = new User();
 		userDA = new UserDA(connection);
 		users = userDA.GetFirstUser();
 		getDisplayUser();
 		
-		
+		if(user.getUserType().equalsIgnoreCase("users"))
+		{
+			
+			remove(btnNext);
+			remove(btnFirst);
+			remove(btnPrevious);
+			remove(btnLast);
+			remove(btnDelete);
+			remove(btnAdd);
+			remove(btnUpdate);
+			remove(btnSearch);
+			remove(btnSave);
+			remove(btnCancel);
+		}
 		setVisible(true);
 		setEditable(false);
 	}
@@ -419,6 +457,54 @@ public class UserInformationUI extends JPanel implements ActionListener{
 	          else if(result == JFileChooser.CANCEL_OPTION){
 	              System.out.println("No File Select");
 	          }
+		}
+		else if(action.equalsIgnoreCase("Search")){
+			tableHeader = new String[]{"Transaction No.","Book Code","Book Title","Date Issued", "Due Date","Date returned","Penalty"};
+			
+			tableModel = new DefaultTableModel(tableHeader,0);
+			table.setModel(tableModel);
+			
+//			bookBorrowedDA.getUserHistory(connection, user);
+//			bookBorrowedDA.getUserHistory(connection, user);
+			
+			bookBorrowedList= bookBorrowedDA.getHistoryList();
+			
+			if(searchTF.getText().length() != 0 )
+			{
+				
+				if(librarySystemMain.isValidWord(searchTF.getText())) 
+				{
+					bookBorrowedList = new ArrayList<BookBorrowed>();
+					bookBorrowedList.clear();
+					 
+					bookBorrowedList = (ArrayList<BookBorrowed>)bookBorrowedDA.getHistoryList();
+					
+					for(BookBorrowed bookborrowed : bookBorrowedDA.getHistoryList())
+					{
+						if(bookborrowed.getSelectedBooks().getBookName().toLowerCase().contains(searchTF.getText())) 
+						{
+//							tableHeader = new String[]{"Transaction No.","Book Code","Book Title,Date Issued, Due Date,Date returned,Penalty"};
+														
+							String[] row = {bookborrowed.getTransNumber(),bookborrowed.getSelectedBooks().getBookCode(),bookborrowed.getSelectedBooks().getBookName(),
+										bookborrowed.getBorrowedDate().toString(),bookborrowed.getDueDate().toString(),bookborrowed.getReturnDate().toString()};
+							bookBorrowedList.add(bookborrowed);
+							tableModel.addRow(row);
+						}
+						
+						
+					}	
+				}
+				else 
+				{
+					JOptionPane.showMessageDialog(null, "Incorrect Input");
+					librarySystemMain.fillBookTable();
+				}
+			}
+			else 
+				
+				librarySystemMain.fillBookTable();
+			
+			librarySystemMain.renderTable();
 		}
 		
 		else if(action.equals("Add")) {
@@ -601,8 +687,6 @@ public class UserInformationUI extends JPanel implements ActionListener{
 								users.setUserId(userIdTF.getText());
 								users.setUserName(userNameTF.getText());
 								users.setPassWord(passwordTF.getText());
-								System.out.println(users.getUserId() +"@userinformationUI line 545");
-								System.out.println(passwordTF.getText() +"@userinformationUI lne 546");
 								users.setUserType(userTypeBox.getSelectedItem().toString());
 								
 
@@ -693,7 +777,7 @@ public class UserInformationUI extends JPanel implements ActionListener{
 		fnameTF.setVisible(input);
 		middleTF.setVisible(input);
 		lnameTF.setVisible(input);
-		progBox.setVisible(input);
+
 		deptBox.setVisible(input);
 		btnSave.setVisible(input);
 		btnCancel.setVisible(input);
@@ -752,7 +836,6 @@ public class UserInformationUI extends JPanel implements ActionListener{
 	}
 	public void setEditableTable(boolean input) {
 		searchTF.setEditable(input);
-		textField.setEditable(input);
 	}
 	public void EnableNavButtons(boolean choice) {
 		btnFirst.setEnabled(choice);
@@ -776,4 +859,5 @@ public class UserInformationUI extends JPanel implements ActionListener{
         ImageIcon image = new ImageIcon(newImg);
         return image;
     }
+
 }

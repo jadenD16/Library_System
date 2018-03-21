@@ -71,12 +71,9 @@ public class AddUI extends JDialog implements ActionListener {
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
-<<<<<<< HEAD
 //		contentPanel.setBackground(new Color(51, 153, 153));
 		
 		contentPanel.setLayout(null);
-=======
->>>>>>> 05b5b5d96e5acbd6b1c2ef0ba263004957e68089
 		
 		bookAuthorDA = new BookAuthorDA(connection);
 		sectionDA = new SectionDA(connection);

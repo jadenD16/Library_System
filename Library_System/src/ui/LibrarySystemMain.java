@@ -101,7 +101,6 @@ public class LibrarySystemMain extends JFrame implements ActionListener{
 	public LibrarySystemMain() 
 	{
 		getContentPane().setBackground(new Color(0, 0, 255));
-		userinformationUI = new UserInformationUI(getConnection());
 		booksDA = new BooksDA(getConnection());
 		bookBDA = new BookBorrowedDA(getConnection());
 		
@@ -294,15 +293,13 @@ public class LibrarySystemMain extends JFrame implements ActionListener{
 		}
 		else if(action.equalsIgnoreCase("Manage Users")) 
 		{
-			manageUser();
+			manageUser(user);
 			repaint();
 			revalidate();
 		}	
 		else if(action.equalsIgnoreCase("login"))
-		{
 			loginUI = new LoginUI(getConnection(),home);
 
-		}
 		else if(action.equalsIgnoreCase("Log out")) {
 			btnLogin.setText("Login");
 			System.out.println("napipindot");
@@ -317,13 +314,7 @@ public class LibrarySystemMain extends JFrame implements ActionListener{
 			panel.repaint();
 			repaint();
 		}
-			
-		else if(action == "Manage Books")
-			fillBookTable();
-
-		else if(action == "Manage Users") 
-			manageUser();
-		
+					
 		else if(action.equalsIgnoreCase("View History"))
 			fillHistoryTable();
 		
@@ -360,7 +351,12 @@ public class LibrarySystemMain extends JFrame implements ActionListener{
 		else if(action.equalsIgnoreCase("Borrowing List"))
 			
 				bookBorrowedUI = new BookBorrowedUI(bookBDA,user);
-		}
+		
+		else if(action.equalsIgnoreCase("View Profile"))
+			manageUser(user);
+			repaint();
+			revalidate();
+	}
 		
 	
 	
@@ -395,16 +391,15 @@ public class LibrarySystemMain extends JFrame implements ActionListener{
 		}	
 	
 	
-	public void manageUser() {
+	public void manageUser(User user) {
+		userinformationUI = new UserInformationUI(getConnection(),user);
+
 		remove(btnSearch);
 		remove(textField);
 		remove(scrollPane);
 		remove(btnAdd);
 		remove(btnUpdate);
-<<<<<<< HEAD
-=======
 
->>>>>>> 05b5b5d96e5acbd6b1c2ef0ba263004957e68089
 		getContentPane().add(userinformationUI);
 		repaint();
 		
