@@ -8,16 +8,10 @@ import java.util.List;
 public class BookBorrowed 
 {
 
-	private String transNumber,penalty,userID;
+	private String transNumber,penalty;
 	private Timestamp returnDate, borrowedDate,dueDate;
 	private SelectedBook selectedBooks;
 	
-	public String getUserID() {
-		return userID;
-	}
-	public void setUserID(String userID) {
-		this.userID = userID;
-	}
 	
 	public String getPenalty() {
 		return penalty;

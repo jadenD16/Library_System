@@ -25,7 +25,6 @@ import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumnModel;
 
 import domain.Author;
-import domain.BookBorrowed;
 import domain.Books;
 import domain.SelectedBook;
 import domain.User;
@@ -81,10 +80,9 @@ public class LibrarySystemMain extends JFrame implements ActionListener{
 	private UserInformationUI userinformationUI;
 	private List<Books> bookList;
 	private ArrayList<Books> bookSearchList;
-	
 	private AddUI addUI;
 	private LoginUI loginUI;
-	private User user;	
+	private User user;
 	private JLabel lblname;
 	private SelectedBook selected;
 	private BookBorrowedUI bookBorrowedUI;
@@ -226,6 +224,11 @@ public class LibrarySystemMain extends JFrame implements ActionListener{
 			getContentPane().add(scrollPane);
 			getContentPane().add(btnAdd);
 			getContentPane().add(btnUpdate);
+<<<<<<< HEAD
+			
+=======
+					
+>>>>>>> 36c8ab7d85d39d5b884eacb79b05118e2bf81d51
 			remove(userinformationUI);
 			repaint();
 			
@@ -304,11 +307,33 @@ public class LibrarySystemMain extends JFrame implements ActionListener{
 
 		else if(action == "Manage Users") 
 			manageUser();
+		else if(action.equalsIgnoreCase("View History")){
+			tableHeader = new String[]{"Transaction No.","UserID","Book Code","Book Title",
+					"Book Author","Date Issued","Due Date" ,"Date Returned","Penalty"};
+	
+			tableModel = new DefaultTableModel(tableHeader,0)
+			{
+			boolean[] columnEditables = new boolean[] {
+					false, false, false, false,false,false,false,false
+				};
+				public boolean isCellEditable(int row, int column) {
+					return columnEditables[column];
+				}
+			};
 		
-		else if(action.equalsIgnoreCase("View History"))
-			fillHistoryTable();
-		
-		
+			table.setModel(tableModel);
+			bookList= booksDA.getBookList();
+			
+						
+			for(Books book : booksDA.getBookList())
+			{
+												
+				tableModel.addRow(new Object[]{book.getBookCode(),book.getBookName(),book.getBookAuthor(),book.getSection(),book.getShelfNumber(),
+							  book.getCategory(),book.getYearPub()});
+			}
+				
+			renderTable();
+		}
 		else if(action.equals("Borrow"))
 		{
 			int row=table.getSelectedRow(),
@@ -381,7 +406,11 @@ public class LibrarySystemMain extends JFrame implements ActionListener{
 		remove(scrollPane);
 		remove(btnAdd);
 		remove(btnUpdate);
+<<<<<<< HEAD
+=======
 
+		
+>>>>>>> 36c8ab7d85d39d5b884eacb79b05118e2bf81d51
 		getContentPane().add(userinformationUI);
 		repaint();
 		
@@ -400,7 +429,7 @@ public class LibrarySystemMain extends JFrame implements ActionListener{
 			{
 				Class.forName("com.ibm.db2.jcc.DB2Driver");
 				connection = DriverManager.getConnection
-						("jdbc:db2://localhost:50000/library","sweetie", "medeys");
+						("jdbc:db2://localhost:50000/library","Edwin Javinar", "secret");
 			}
 			catch(ClassNotFoundException e1)
 			{
@@ -412,6 +441,8 @@ public class LibrarySystemMain extends JFrame implements ActionListener{
 			}
 		return connection;
 	}
+
+	
 
 	public void fillBookTable()
 	{
@@ -429,7 +460,9 @@ public class LibrarySystemMain extends JFrame implements ActionListener{
 				}
 		};
 		
-		table.setModel(tableModel);		
+		table.setModel(tableModel);
+		bookList= booksDA.getBookList();
+		
 						
 		for(Books book : booksDA.getBookList())
 		{
@@ -463,35 +496,5 @@ public class LibrarySystemMain extends JFrame implements ActionListener{
 	    }	
 	}
 
-	public void fillHistoryTable()
-
-	{
-		tableHeader = new String[]{"Transaction No.","UserID","Book Code","Book Title",
-				"Book Author","Date Issued","Due Date" ,"Date Returned","Penalty"};
-
-		
-		tableModel = new DefaultTableModel(tableHeader,0)
-		{
-		boolean[] columnEditables = new boolean[] {
-				false, false, false, false,false,false,false,true,false
-			};
-			public boolean isCellEditable(int row, int column) {
-				return columnEditables[column];
-			}
-		};
-		
-		bookBDA.getHistory(connection);
-		
-		table.setModel(tableModel);
-		for(BookBorrowed borrowed : bookBDA.getHistoryList())
-		{
-											
-			selected = borrowed.getSelectedBooks();
-			tableModel.addRow(new Object[]{borrowed.getTransNumber(),borrowed.getUserID(),selected.getBookCode(),selected.getBookName(),selected.getBookAuthor(),
-					borrowed.getBorrowedDate(),borrowed.getDueDate(),"-------","-------"});
-		}
-			
-		renderTable();
-
-	}
+	
 }
