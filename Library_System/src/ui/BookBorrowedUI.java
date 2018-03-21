@@ -22,7 +22,12 @@ import javax.swing.ListSelectionModel;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.awt.event.ActionEvent;
 import javax.swing.JLabel;
@@ -42,20 +47,33 @@ public class BookBorrowedUI extends JDialog implements ActionListener {
 	private JScrollPane scrollPane;
 	private TableColumnModel columnModel;
 	private JComboBox comboBox; 
-	private BookBorrowedDA bookBorrowedDA;
+	private BookBorrowedDA bookBDA;
 	private List<SelectedBook> bookList;
-	private JLabel lblBooksToBe;
+	private BookBorrowed bookB;
+	private JLabel lblBooksToBe,lblDeadline,lblDays,lblTransactionNumber,lblDateIssued;
+	private SimpleDateFormat sdf = new SimpleDateFormat("MMM dd,yyyy 'at' HH:mm");
+	private Calendar calendar;
+	private SelectedBook selectedBooks;
+	private Date date,dueDate;
+	private Timestamp dDate, dueDateS;
+	private Integer transNumber;
+	private User user;
 	
-	public BookBorrowedUI(BookBorrowedDA bookBDA) {
+	public BookBorrowedUI(BookBorrowedDA bookBorrowedDA, User user) {
 		getContentPane().setFont(new Font("Tahoma", Font.PLAIN, 17));
 		getContentPane().setBackground(new Color(0, 128, 128));
-		
+		bookB = new BookBorrowed();
 		setUndecorated(true);
 		setModal(true);
-		setBounds(100, 100, 664, 475);
+		setBounds(100, 100, 664, 496);
 		getContentPane().setLayout(null);
 		
-		bookBorrowedDA=bookBDA;
+		bookBDA=bookBorrowedDA;
+		this.user=user;
+		date = new Date();
+		dueDate=new Date();
+		dDate = new Timestamp(date.getTime());
+		calendar = Calendar.getInstance();
 		
 		scrollPane = new JScrollPane();
 		scrollPane.setOpaque(false);
@@ -104,7 +122,8 @@ public class BookBorrowedUI extends JDialog implements ActionListener {
 		btnBorrowNow.setContentAreaFilled(false);
 		btnBorrowNow.setOpaque(false);
 		btnBorrowNow.setFont(new Font("Segoe UI", Font.BOLD, 30));
-		btnBorrowNow.setBounds(370, 427, 294, 48);
+		btnBorrowNow.setBounds(335, 444, 329, 52);
+		btnBorrowNow.addActionListener(this);
 		getContentPane().add(btnBorrowNow);
 		
 		btnBack = new JButton("Back");
@@ -114,32 +133,33 @@ public class BookBorrowedUI extends JDialog implements ActionListener {
 		btnBack.setContentAreaFilled(false);
 		btnBack.setOpaque(false);
 		btnBack.addActionListener(this);
-		btnBack.setBounds(0, 427, 370, 48);
+		btnBack.setBounds(0, 444, 337, 52);
 		getContentPane().add(btnBack);
 		
 		JLabel lblBorrowFor = new JLabel("Borrow For:");
 		lblBorrowFor.setForeground(new Color(255, 255, 255));
 		lblBorrowFor.setHorizontalAlignment(SwingConstants.CENTER);
 		lblBorrowFor.setFont(new Font("Segoe UI", Font.BOLD, 18));
-		lblBorrowFor.setBounds(413, 385, 99, 21);
+		lblBorrowFor.setBounds(370, 390, 99, 21);
 		getContentPane().add(lblBorrowFor);
 		
 		comboBox = new JComboBox();
 		comboBox.setModel(new DefaultComboBoxModel(new String[] {"1", "2", "3", "4", "5", "6", "7"}));
-		comboBox.setBounds(522, 389, 38, 20);
+		comboBox.setBounds(479, 393, 38, 20);
+		comboBox.addActionListener(this);
 		getContentPane().add(comboBox);
 		
-		JLabel lblDays = new JLabel("Day/s");
+		lblDays = new JLabel("Day/s");
 		lblDays.setForeground(new Color(255, 255, 255));
 		lblDays.setHorizontalAlignment(SwingConstants.CENTER);
 		lblDays.setFont(new Font("Segoe UI", Font.BOLD, 18));
-		lblDays.setBounds(571, 389, 56, 19);
+		lblDays.setBounds(527, 393, 56, 19);
 		getContentPane().add(lblDays);
 		
-		JLabel lblTransactionNumber = new JLabel("Transaction Number:");
+		lblTransactionNumber = new JLabel();
 		lblTransactionNumber.setForeground(new Color(255, 255, 255));
 		lblTransactionNumber.setFont(new Font("Segoe UI", Font.BOLD, 18));
-		lblTransactionNumber.setBounds(33, 390, 274, 15);
+		lblTransactionNumber.setBounds(10, 387, 252, 16);
 		getContentPane().add(lblTransactionNumber);
 		
 		lblBooksToBe = new JLabel("Books To Be Borrowed");
@@ -150,8 +170,23 @@ public class BookBorrowedUI extends JDialog implements ActionListener {
 		lblBooksToBe.setBounds(179, 11, 345, 37);
 		getContentPane().add(lblBooksToBe);
 		
+		lblDeadline = new JLabel();
+		lblDeadline.setHorizontalAlignment(SwingConstants.LEFT);
+		lblDeadline.setForeground(Color.WHITE);
+		lblDeadline.setFont(new Font("Segoe UI", Font.BOLD, 18));
+		lblDeadline.setBounds(370, 412, 284, 21);
+		getContentPane().add(lblDeadline);
+		
+		lblDateIssued = new JLabel();
+		lblDateIssued.setHorizontalAlignment(SwingConstants.LEFT);
+		lblDateIssued.setForeground(Color.WHITE);
+		lblDateIssued.setFont(new Font("Segoe UI", Font.BOLD, 18));
+		lblDateIssued.setBounds(10, 412, 303, 21);
+		getContentPane().add(lblDateIssued);
+		
 		fillBookTable();
 		setLocationRelativeTo(null);
+		setData(comboBox.getSelectedItem().toString());
 		setVisible(true);
 	}
 	
@@ -172,7 +207,7 @@ public class BookBorrowedUI extends JDialog implements ActionListener {
 		};
 		
 		table.setModel(tableModel);
-		bookList= bookBorrowedDA.getSelectedBList();
+		bookList= bookBDA.getSelectedBList();
 		
 		for(SelectedBook book : bookList)
 		{
@@ -202,7 +237,7 @@ public class BookBorrowedUI extends JDialog implements ActionListener {
 		
 		table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
         
-		for (int column = 0; column < table.getColumnCount(); column++) 
+		for (int column = 0; column < table.getColumnCount(); column++)
 		{
 	        int width = 70; // Min width
 	        for (int row = 0; row < table.getRowCount(); row++) 
@@ -217,13 +252,48 @@ public class BookBorrowedUI extends JDialog implements ActionListener {
 	    }	
 	}
 
+	public void setData(String days)
+	{
+		//Setting the Date abd Tune
+		lblDateIssued.setText("Date issued: "+sdf.format(date));
+		
+
+		//Adding of Days
+		calendar.setTime(date);
+		calendar.add(Calendar.DATE,Integer.valueOf(days));
+		
+		dueDate = calendar.getTime();
+		dueDateS = new Timestamp(calendar.getTimeInMillis());
+		lblDeadline.setText("Due Date: "+sdf.format(dueDate));
+		
+		//Transaction Nunber
+		
+		lblTransactionNumber.setText("Transaction Number:"+00001);
+		revalidate();
+	}
+	
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		
 		String event = e.getActionCommand();
 		
 		if(event.equalsIgnoreCase("Back"))
-			this.dispose();
+			dispose();
+		
+		else if(e.getSource()==comboBox)
+		{
+			setData(comboBox.getSelectedItem().toString());			
+		}
+		
+		else if(event.equalsIgnoreCase("Borrow Now"))
+		{
+			bookB = new BookBorrowed();
+			
+			bookB.setTransNumber(String.format("%05d", 1));
+			bookB.setBorrowedDate(dDate);
+			bookB.setReturnDate(dueDateS);
+			bookBDA.confirmBooks(bookB,user);
+		}
 		
 	}
 }

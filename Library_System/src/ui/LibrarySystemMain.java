@@ -54,6 +54,7 @@ import java.awt.event.ActionEvent;
 import javax.swing.JComboBox;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingConstants;
+import javax.swing.border.MatteBorder;
 
 public class LibrarySystemMain extends JFrame implements ActionListener{
 
@@ -64,7 +65,7 @@ public class LibrarySystemMain extends JFrame implements ActionListener{
 	private JScrollPane scrollPane;	
 	private JComboBox comboBox;
 	
-	private JLabel lblNewLabel_1,lblFilterby,lblBackground,lblSearch,lblprofile  ;
+	private JLabel lblNewLabel_1,lblFilterby,lblSearch,lblprofile  ;
 	
 	private JButton btnUpdate, btnAdd, btnLogin,btnBorrowedBooks,btnSearch,btnManageBooks,btnViewHistory,btnManageUsers,btnBorrow ;
 	
@@ -90,10 +91,10 @@ public class LibrarySystemMain extends JFrame implements ActionListener{
 	
 	public LibrarySystemMain() 
 	{
+		getContentPane().setBackground(new Color(0, 0, 255));
 		userinformationUI = new UserInformationUI(getConnection());
 		booksDA = new BooksDA(getConnection());
-		user = new User();
-		bookBDA = new BookBorrowedDA();
+		bookBDA = new BookBorrowedDA(getConnection());
 		
 		setResizable(false);
 		setSize(1370, 718);		
@@ -156,6 +157,7 @@ public class LibrarySystemMain extends JFrame implements ActionListener{
 		table.getTableHeader().setReorderingAllowed(false);
 		
 		scrollPane = new JScrollPane(table,JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+		scrollPane.setBorder(new MatteBorder(3, 3, 3, 3, (Color) new Color(0, 0, 0)));
 		scrollPane.setEnabled(false);
 		scrollPane.setOpaque(false);
 		scrollPane.setBounds(341, 237, 985, 352);
@@ -179,6 +181,11 @@ public class LibrarySystemMain extends JFrame implements ActionListener{
 		textField.setColumns(10);
 		getContentPane().add(textField);
 		
+		lblSearch = new JLabel("Search");
+		lblSearch.setForeground(new Color(245, 255, 250));
+		lblSearch.setFont(new Font("Segoe UI", Font.BOLD, 16));
+		lblSearch.setBounds(342, 185, 80, 26);
+		getContentPane().add(lblSearch);
 		
 		
 		btnSearch = new JButton("Search");	
@@ -188,6 +195,7 @@ public class LibrarySystemMain extends JFrame implements ActionListener{
 	
 		
 		JLabel lblLibraryManagementSystem = new JLabel("LIBRARY MANAGEMENT SYSTEM");
+		lblLibraryManagementSystem.setBorder(new MatteBorder(0, 0, 4, 0, (Color) new Color(0, 0, 0)));
 		lblLibraryManagementSystem.setHorizontalAlignment(SwingConstants.CENTER);
 		lblLibraryManagementSystem.setFont(new Font("Segoe UI", Font.BOLD, 52));
 		lblLibraryManagementSystem.setBackground(new Color(30, 144, 255));
@@ -198,14 +206,9 @@ public class LibrarySystemMain extends JFrame implements ActionListener{
 		btnBorrow = new JButton("Borrow");
 		btnBorrow.setBounds(1237, 209, 89, 23);
 		btnBorrow.addActionListener(this);
-		getContentPane().add(btnBorrow);
-		
-		lblBackground = new JLabel("");
-		lblBackground.setIcon(new ImageIcon(LibrarySystemMain.class.getResource("/pictures/background.jpg")));
-		lblBackground.setBounds(0, 0, 1364, 674);
-		getContentPane().add(lblBackground);
 		
 		fillBookTable();
+		
 		setVisible(true);
 	}
 	
@@ -222,7 +225,8 @@ public class LibrarySystemMain extends JFrame implements ActionListener{
 			getContentPane().add(scrollPane);
 			getContentPane().add(btnAdd);
 			getContentPane().add(btnUpdate);
-			getContentPane().add(lblBackground); 
+			getContentPane().add(comboBox);
+			getContentPane().add(lblFilterby);
 			
 			remove(userinformationUI);
 			repaint();
@@ -291,8 +295,11 @@ public class LibrarySystemMain extends JFrame implements ActionListener{
 			revalidate();
 		}	
 		else if(action.equalsIgnoreCase("login"))
+		{
 			loginUI = new LoginUI(getConnection());
-				
+
+		}	
+			
 		else if(action == "Manage Books")
 			fillBookTable();
 		else if(action == "Manage Users") 
@@ -328,13 +335,16 @@ public class LibrarySystemMain extends JFrame implements ActionListener{
 			 }
 		
 		else if(action.equalsIgnoreCase("Borrowing List"))
-				bookBorrowedUI = new BookBorrowedUI(bookBDA);
+			
+				bookBorrowedUI = new BookBorrowedUI(bookBDA,user);
 		}
 		
 	
 	
-	public void loggedIn(String userType)
+	public void loggedIn(String userType, User user)
 	{
+		this.user = user;
+		
 		if(userType.equalsIgnoreCase("admin"))
 		{
 			
@@ -351,10 +361,13 @@ public class LibrarySystemMain extends JFrame implements ActionListener{
 			panel.add(btnBorrowedBooks);
 			panel.add(btnViewHistory);
 			panel.add(btnManageBooks);
+			getContentPane().add(btnBorrow);
+
 		}
 		
 		
 			panel.repaint();	
+			repaint();
 		}	
 	
 	
@@ -364,10 +377,10 @@ public class LibrarySystemMain extends JFrame implements ActionListener{
 		remove(scrollPane);
 		remove(btnAdd);
 		remove(btnUpdate);
-		remove(lblBackground);
+		remove(comboBox);
+		remove(lblFilterby);
 		
 		getContentPane().add(userinformationUI);
-		getContentPane().add(lblBackground);
 		repaint();
 		
 
@@ -386,7 +399,7 @@ public class LibrarySystemMain extends JFrame implements ActionListener{
 			{
 				Class.forName("com.ibm.db2.jcc.DB2Driver");
 				connection = DriverManager.getConnection
-						("jdbc:db2://localhost:50000/library","Edwin Javinar", "secret");
+						("jdbc:db2://localhost:50000/library","sweetie", "medeys");
 			}
 			catch(ClassNotFoundException e1)
 			{
@@ -454,12 +467,9 @@ public class LibrarySystemMain extends JFrame implements ActionListener{
 	    }	
 	}
 	
-	
-	
- 	public static void main(String[]args)
+	public static void main(String[]args)
 	{
-		new LibrarySystemMain();		
+		new LibrarySystemMain();
 	}
-
 	
 }
