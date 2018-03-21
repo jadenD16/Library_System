@@ -121,7 +121,8 @@ public class LibrarySystemMain extends JFrame implements ActionListener{
 		btnViewHistory = new JButton("View History");
 		btnViewHistory.setFont(new Font("Segoe UI", Font.BOLD, 20));
 		btnViewHistory.setBounds(34, 343, 203, 29);
-				
+		btnViewHistory.addActionListener(this);
+		
 		btnManageBooks = new JButton("Manage Books");
 		btnManageBooks.setFont(new Font("Segoe UI", Font.BOLD, 20));
 		btnManageBooks.setBounds(34, 386, 203, 29);
@@ -291,7 +292,33 @@ public class LibrarySystemMain extends JFrame implements ActionListener{
 
 		else if(action == "Manage Users") 
 			manageUser();
+		else if(action.equalsIgnoreCase("View History")){
+			tableHeader = new String[]{"Transaction No.","UserID","Book Code","Book Title",
+					"Book Author","Date Issued","Due Date" ,"Date Returned","Penalty"};
 	
+			tableModel = new DefaultTableModel(tableHeader,0)
+			{
+			boolean[] columnEditables = new boolean[] {
+					false, false, false, false,false,false,false,false
+				};
+				public boolean isCellEditable(int row, int column) {
+					return columnEditables[column];
+				}
+			};
+		
+			table.setModel(tableModel);
+			bookList= booksDA.getBookList();
+			
+						
+			for(Books book : booksDA.getBookList())
+			{
+												
+				tableModel.addRow(new Object[]{book.getBookCode(),book.getBookName(),book.getBookAuthor(),book.getSection(),book.getShelfNumber(),
+							  book.getCategory(),book.getYearPub()});
+			}
+				
+			renderTable();
+		}
 		else if(action.equals("Borrow"))
 		{
 			int row=table.getSelectedRow(),

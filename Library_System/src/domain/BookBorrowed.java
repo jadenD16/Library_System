@@ -8,15 +8,28 @@ import java.util.List;
 public class BookBorrowed 
 {
 
-	private String transNumber;
-	private Timestamp returnDate, borrowedDate;
+	private String transNumber,penalty;
+	private Timestamp returnDate, borrowedDate,dueDate;
 	private SelectedBook selectedBooks;
 	
+	
+	public String getPenalty() {
+		return penalty;
+	}
+	public void setPenalty(String penalty) {
+		this.penalty = penalty;
+	}
+	public Timestamp getDueDate() {
+		return dueDate;
+	}
+	public void setDueDate(Timestamp dueDate) {
+		this.dueDate = dueDate;
+	}
 	public String getTransNumber() {
 		return transNumber;
 	}
 	public void setTransNumber(String transNumber) {
-		this.transNumber = transNumber;
+		this.transNumber = transNumber; 
 	}
 	public Timestamp getReturnDate() {
 		return returnDate;
