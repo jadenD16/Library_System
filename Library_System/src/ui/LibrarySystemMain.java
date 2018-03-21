@@ -63,9 +63,8 @@ public class LibrarySystemMain extends JFrame implements ActionListener{
 	private JTextField textField;
 	private SelectedBook selectB;
 	private JScrollPane scrollPane;	
-	private JComboBox comboBox;
 	
-	private JLabel lblNewLabel_1,lblFilterby,lblSearch,lblprofile  ;
+	private JLabel lblNewLabel_1,lblprofile  ;
 	
 	private JButton btnUpdate, btnAdd, btnLogin,btnBorrowedBooks,btnSearch,btnManageBooks,btnViewHistory,btnManageUsers,btnBorrow ;
 	
@@ -224,12 +223,17 @@ public class LibrarySystemMain extends JFrame implements ActionListener{
 			getContentPane().add(scrollPane);
 			getContentPane().add(btnAdd);
 			getContentPane().add(btnUpdate);
+<<<<<<< HEAD
 			
+=======
+					
+>>>>>>> 36c8ab7d85d39d5b884eacb79b05118e2bf81d51
 			remove(userinformationUI);
 			repaint();
 			
 			fillBookTable();
 		}
+		
 		else if(action.equalsIgnoreCase("Search")) {
 			tableHeader = new String[]{"Title","Author","Section",
 					"Shelf","Category","P.Y"};
@@ -269,10 +273,9 @@ public class LibrarySystemMain extends JFrame implements ActionListener{
 				}
 			}
 			else 
-			{
 				
 				fillBookTable();
-			}
+			
 			renderTable();
 		}	
 		else if(action.equalsIgnoreCase("Add"))
@@ -300,6 +303,7 @@ public class LibrarySystemMain extends JFrame implements ActionListener{
 			
 		else if(action == "Manage Books")
 			fillBookTable();
+
 		else if(action == "Manage Users") 
 			manageUser();
 	
@@ -375,10 +379,14 @@ public class LibrarySystemMain extends JFrame implements ActionListener{
 		remove(scrollPane);
 		remove(btnAdd);
 		remove(btnUpdate);
+<<<<<<< HEAD
+=======
+
+		
+>>>>>>> 36c8ab7d85d39d5b884eacb79b05118e2bf81d51
 		getContentPane().add(userinformationUI);
 		repaint();
 		
-
 	}
 	public static boolean isValidWord(String book) {
 		if((book.charAt(0)+"").matches("[a-zA-Z0-9]"))
