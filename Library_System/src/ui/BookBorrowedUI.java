@@ -291,7 +291,7 @@ public class BookBorrowedUI extends JDialog implements ActionListener {
 			
 			bookB.setTransNumber(String.format("%05d", 1));
 			bookB.setBorrowedDate(dDate);
-			bookB.setReturnDate(dueDateS);
+			bookB.setDueDate(dueDateS);
 			bookBDA.confirmBooks(bookB,user);
 		}
 		
