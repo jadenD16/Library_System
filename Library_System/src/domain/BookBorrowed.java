@@ -2,32 +2,33 @@ package domain;
 
 import java.sql.Date;
 import java.util.ArrayList;
+import java.sql.Timestamp;
 import java.util.List;
 
 public class BookBorrowed 
 {
 
-	private Integer transNumber;
-	private Date returnDate,borrowedDate;
+	private String transNumber;
+	private Timestamp returnDate, borrowedDate;
 	private SelectedBook selectedBooks;
 	
-	public Integer getTransNumber() {
+	public String getTransNumber() {
 		return transNumber;
 	}
-	public void setTransNumber(Integer transNumber) {
+	public void setTransNumber(String transNumber) {
 		this.transNumber = transNumber;
 	}
-	public Date getReturnDate() {
+	public Timestamp getReturnDate() {
 		return returnDate;
 	}
-	public void setReturnDate(Date returnDate) {
-		this.returnDate = returnDate;
+	public void setReturnDate(Timestamp dueDateS) {
+		this.returnDate = dueDateS;
 	}
-	public Date getBorrowedDate() {
+	public Timestamp getBorrowedDate() {
 		return borrowedDate;
 	}
-	public void setBorrowedDate(Date borrowedDate) {
-		this.borrowedDate = borrowedDate;
+	public void setBorrowedDate(Timestamp dDate) {
+		this.borrowedDate = dDate;
 	}
 	public SelectedBook getSelectedBooks() {
 		return selectedBooks;

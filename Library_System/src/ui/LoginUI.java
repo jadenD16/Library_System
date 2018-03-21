@@ -120,7 +120,8 @@ public class LoginUI extends JDialog implements ActionListener
 					
 					dispose();
 					ui = new LibrarySystemMain();
-					ui.loggedIn(user.getUserType());
+					ui.loggedIn(user.getUserType(),user);
+					
 					break;
 				}
 				
