@@ -19,6 +19,7 @@ import domain.BookAuthor;
 import domain.Books;
 import domain.Category;
 import domain.Section;
+import domain.SelectedBook;
 import techServ.BookAuthorDA;
 import techServ.BooksDA;
 import techServ.CategoryDA;
@@ -56,8 +57,8 @@ public class UpdateUI extends JDialog implements ActionListener {
 	private BookAuthorDA bookAuthorDA;
 	private Connection connection;
 	private UserInformationUI userinformationUI;
-
-	public UpdateUI(Connection connection) {
+	private LibrarySystemMain lbmain;
+	public UpdateUI(Connection connection, SelectedBook selectB) {
 		this.connection = connection;
 		contentPanel = new JPanel();
 				
@@ -280,4 +281,5 @@ public class UpdateUI extends JDialog implements ActionListener {
 				JOptionPane.showMessageDialog(null, "Please Fill Up the Blanks");
 		}
 	}
+	
 }
