@@ -65,7 +65,7 @@ public class LibrarySystemMain extends JFrame implements ActionListener{
 	private JScrollPane scrollPane;	
 	private JComboBox comboBox;
 	
-	private JLabel lblNewLabel_1,lblFilterby,lblSearch,lblprofile  ;
+	private JLabel lblNewLabel_1,lblprofile  ;
 	
 	private JButton btnUpdate, btnAdd, btnLogin,btnBorrowedBooks,btnSearch,btnManageBooks,btnViewHistory,btnManageUsers,btnBorrow ;
 	
@@ -180,13 +180,6 @@ public class LibrarySystemMain extends JFrame implements ActionListener{
 		textField.setColumns(10);
 		getContentPane().add(textField);
 		
-		lblSearch = new JLabel("Search");
-		lblSearch.setForeground(new Color(245, 255, 250));
-		lblSearch.setFont(new Font("Segoe UI", Font.BOLD, 16));
-		lblSearch.setBounds(342, 185, 80, 26);
-		getContentPane().add(lblSearch);
-		
-		
 		btnSearch = new JButton("Search");	
 		btnSearch.setBounds(342, 185, 80, 26);
 		btnSearch.addActionListener(this);
@@ -224,9 +217,7 @@ public class LibrarySystemMain extends JFrame implements ActionListener{
 			getContentPane().add(scrollPane);
 			getContentPane().add(btnAdd);
 			getContentPane().add(btnUpdate);
-			getContentPane().add(comboBox);
-			getContentPane().add(lblFilterby);
-			
+					
 			remove(userinformationUI);
 			repaint();
 			
@@ -374,7 +365,6 @@ public class LibrarySystemMain extends JFrame implements ActionListener{
 		remove(btnAdd);
 		remove(btnUpdate);
 		remove(comboBox);
-		remove(lblFilterby);
 		
 		getContentPane().add(userinformationUI);
 		repaint();
